@@ -13,10 +13,21 @@ export interface UnitProgress {
   lastComponentId?: string;
 }
 
+export type RecallRating = 'good' | 'again';
+
+export interface RecallItemState {
+  step: number;      // rung on the spaced-recall ladder
+  due: string;       // ISO date the item resurfaces
+  lapses: number;    // times rated 'again'
+  relearn?: true;    // lapsed: the next 'good' re-earns the current rung instead of advancing
+}
+
 export interface ProgressState {
   version: number;
   courses: Record<string, { units: Record<string, UnitProgress> }>;
   lastLocation?: { courseId: string; unitId: string; componentId: string };
+  // Optional so version-1 blobs saved before Plan 3 hydrate unchanged.
+  recall?: Record<string, RecallItemState>; // key: courseId/unitId/cardId
   updatedAt: string; // ISO
 }
 

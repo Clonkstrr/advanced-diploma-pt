@@ -38,6 +38,22 @@ describe('progressStore', () => {
     expect(b.getState().state.lastLocation?.componentId).toBe('apt501-u1-c2');
   });
 
+  it('scheduleRecall and reviewCard persist recall state across a reload', async () => {
+    const adapter = new StorageAdapter('recall-' + Math.random().toString(36).slice(2));
+    const a = createProgressStore(adapter, () => '2026-07-16T12:00:00.000Z');
+    a.getState().scheduleRecall('apt501', 'apt501-u1', { r1: 'good', r2: 'again' });
+    a.getState().reviewCard('apt501/apt501-u1/r2', 'good');
+    await a.getState().flush();
+
+    const b = createProgressStore(adapter, () => '2026-07-16T12:00:00.000Z');
+    await b.getState().hydrate();
+    const recall = b.getState().state.recall!;
+    expect(recall['apt501/apt501-u1/r1'].step).toBe(0);
+    expect(recall['apt501/apt501-u1/r1'].lapses).toBe(0);
+    expect(recall['apt501/apt501-u1/r2'].lapses).toBe(1); // the again
+    expect(recall['apt501/apt501-u1/r2'].due > '2026-07-18').toBe(true); // re-rated good -> +3d
+  });
+
   it('hydrate resolves and keeps empty in-memory state when loading fails', async () => {
     const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const broken = {
