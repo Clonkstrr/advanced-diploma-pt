@@ -4,6 +4,8 @@ import { useProgress } from '../state/StoreProvider';
 import { ConceptBlock } from './components/ConceptBlock';
 import { OutcomesBlock } from './components/OutcomesBlock';
 import { QuestionSet } from './components/QuestionSet';
+import { Visual } from './components/Visual';
+import { WorkedExample } from './components/WorkedExample';
 
 function startIndex(components: UnitComponent[], lastComponentId?: string): number {
   if (!lastComponentId) return 0;
@@ -88,10 +90,19 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
             }}
           />
         );
+      case 'visual':
+        return (
+          <Visual key={current.id} title={current.title} diagramId={current.diagramId}
+            caption={current.caption} callouts={current.callouts} />
+        );
+      case 'workedExample':
+        return (
+          <WorkedExample key={current.id} title={current.title} scenario={current.scenario}
+            steps={current.steps} takeaway={current.takeaway}
+            initialRevealed={unitProgress?.components[current.id]?.completed} />
+        );
       // Plan 2 renderers land one per task; until then these fall through to
       // the placeholder so the schema/type work can ship independently.
-      case 'visual':
-      case 'workedExample':
       case 'classification':
       case 'numericLab':
       case 'errorId':
