@@ -4,19 +4,20 @@ An offline, interactive, university-level course application. The learner works 
 
 > **New here / next session? Read `docs/HANDOFF.md` first** — it says exactly where we stopped and what to do next.
 
-## Status (as of 2026-07-15)
+## Status (as of 2026-07-16)
 
-**Plan 1 (Platform Foundation): Phases A–E implemented; Phase F (live launch + final review) pending.**
+**Plan 1 (Platform Foundation): complete and verified (Phases A–F), final review findings applied.**
 
 - ✅ Vite + React 19 + TypeScript toolchain, Vitest tests
-- ✅ Content schema (Zod) + data-driven lesson model + APT 501 seed Unit 1 (fully authored, completable)
-- ✅ IndexedDB storage, debounced write-through progress store, hydrate + **resume-on-exact-component** (tested)
-- ✅ Renderer: ConceptBlock / OutcomesBlock / QuestionSet, UnitPlayer stepper, app shell (Home/Catalog/routing), light+dark styling
-- ✅ Electron main/preload + electron-builder config (mac dmg/zip + win dir)
-- ⏳ **Not yet verified: launching the actual Electron app.** See `docs/HANDOFF.md` → "Open item #1" (a likely one-line CJS/ESM fix).
-- ⏳ Phase F: live launch verification, `docs/VERIFICATION.md`, final full-implementation review, then merge `feat/platform-foundation`.
+- ✅ Content schema (Zod, single source of truth, unique-id enforcement) + data-driven lesson model + APT 501 seed Unit 1 (fully authored, completable)
+- ✅ IndexedDB storage (backup-before-overwrite, connection recovery), debounced write-through progress store with failure retry, hydrate + **resume-on-exact-component** (tested)
+- ✅ Renderer: ConceptBlock / OutcomesBlock / QuestionSet, UnitPlayer stepper (compile-checked component dispatch), app shell (Home/Catalog/routing), light+dark styling
+- ✅ Electron shell hardened (single-instance lock, navigation guards, CSP, packaged-build env gating) + electron-builder config (mac dmg/zip + win dir)
+- ✅ Electron launch verified end-to-end: full pretest→concepts→quiz→relaunch→resume flow, 13/13 scripted checks (`docs/VERIFICATION.md`)
+- ✅ Final 6-dimension code review: all 23 confirmed findings fixed (see `docs/HANDOFF.md`)
+- ⏳ Merge `feat/platform-foundation` → `master`
 
-**Tests:** 26 passing (12 files). `npx tsc --noEmit` clean. `npm run build` builds cleanly. Branch: `feat/platform-foundation` (not yet merged to `master`).
+**Tests:** 55 passing (15 files). `npm run build` (typechecks app + vite config, then builds) clean. Branch: `feat/platform-foundation` (not yet merged to `master`).
 
 ## Run it
 
@@ -24,7 +25,7 @@ An offline, interactive, university-level course application. The learner works 
 npm install            # if node_modules is missing
 npm test               # run the test suite (Vitest)
 npm run dev            # renderer only, in a browser (Vite dev server)
-npm run electron:dev   # the desktop app (Vite + Electron)  ← see Open item #1 before trusting this
+npm run electron:dev   # the desktop app (Vite + Electron)
 npm run build          # type-check + build renderer to dist/
 npm run electron:build # build renderer + compile electron + package (.dmg/.zip on a Mac)
 ```

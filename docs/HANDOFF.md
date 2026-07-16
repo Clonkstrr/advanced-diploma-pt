@@ -1,8 +1,18 @@
 # Handoff — resume here (written 2026-07-16, model-agnostic: usable by any AI assistant or human)
 
+> **UPDATE 2026-07-16 (later session): all 23 review findings below are FIXED** across
+> commits `177909d` (batch 1), `7012aaa` (batch 2), `c171b6a` (batch 3), `d97338d`
+> (batch 4), `5b081cc` + the docs/tooling commit (batch 5). Suite is now 55 passing
+> (15 files), typecheck clean. The batch lists below are kept as the record of what
+> changed and why. **NEXT: merge `feat/platform-foundation` → `master`** (needs
+> Josh's go-ahead), then Plan 2. One caveat: the batch-3 Electron hardening (CSP,
+> nav guards, single-instance lock) is verified headlessly but hasn't been exercised
+> in a live launch — do one permission-gated `electron:dev` smoke test before or
+> right after merging.
+
 **Project:** Offline-first Electron + React 19 + TS 7 learning app ("Advanced Diploma in Personal Training Science and Coaching"). End user: Josh's wife, on a **MacBook**. Dev machine: Windows 11.
-**Branch:** `feat/platform-foundation` (HEAD `619473c`, clean tree, NOT merged to `master`).
-**Health:** `npm test` → 28 passing (12 files) · `npx tsc --noEmit -p tsconfig.json` → clean · Electron launches and the full acceptance flow passed a scripted 13/13 e2e drive (`docs/VERIFICATION.md`).
+**Branch:** `feat/platform-foundation` (NOT merged to `master`).
+**Health:** `npm test` → 55 passing (15 files) · `npx tsc --noEmit -p tsconfig.json` → clean · Electron launches and the full acceptance flow passed a scripted 13/13 e2e drive (`docs/VERIFICATION.md`).
 **Plan:** `docs/plans/2026-07-15-platform-foundation.md` (Plan 1 — ALL phases A–F now complete). Design spec: `docs/specs/2026-07-15-advanced-diploma-pt-design.md`.
 
 ## Standing constraints (do not violate)

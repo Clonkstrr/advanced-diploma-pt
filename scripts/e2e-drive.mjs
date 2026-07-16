@@ -8,14 +8,16 @@
 // Screenshots land in e2e-shots/. Exit code 0 only if every check passes.
 import { _electron as electron } from 'playwright-core';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SHOTS = path.join(ROOT, 'e2e-shots');
 const DEV_URL = process.env.ELECTRON_START_URL ?? 'http://localhost:5173';
-// Electron resolves userData from the package.json "name".
-const USER_DATA = path.join(process.env.APPDATA ?? '', 'advanced-diploma-pt');
+// Isolated profile (honoured by main.ts when unpackaged) so the drive never
+// touches or wipes the real user's progress.
+const USER_DATA = path.join(os.tmpdir(), 'advdiploma-e2e-profile');
 
 const results = [];
 function check(name, ok) {
@@ -27,7 +29,7 @@ async function launch() {
   const app = await electron.launch({
     executablePath: path.join(ROOT, 'node_modules', 'electron', 'dist', 'electron.exe'),
     args: [path.join(ROOT, 'dist-electron', 'main.js')],
-    env: { ...process.env, ELECTRON_START_URL: DEV_URL },
+    env: { ...process.env, ELECTRON_START_URL: DEV_URL, ELECTRON_USER_DATA: USER_DATA },
     timeout: 30_000,
   });
   const page = await app.firstWindow();

@@ -5,6 +5,12 @@ import * as path from 'path';
 // never redirect a shipped binary.
 const startUrl = app.isPackaged ? undefined : process.env.ELECTRON_START_URL;
 
+// Dev/e2e only: run against an isolated profile so scripted drives never
+// touch (or wipe) the real user's progress.
+if (!app.isPackaged && process.env.ELECTRON_USER_DATA) {
+  app.setPath('userData', process.env.ELECTRON_USER_DATA);
+}
+
 function createWindow() {
   const win = new BrowserWindow({
     width: 1100,
