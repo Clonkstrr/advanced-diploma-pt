@@ -1,14 +1,14 @@
 # Handoff — resume here (written 2026-07-16, model-agnostic: usable by any AI assistant or human)
 
-> **UPDATE 2026-07-16 (later session): all 23 review findings below are FIXED** across
-> commits `177909d` (batch 1), `7012aaa` (batch 2), `c171b6a` (batch 3), `d97338d`
-> (batch 4), `5b081cc` + the docs/tooling commit (batch 5). Suite is now 55 passing
-> (15 files), typecheck clean. The batch lists below are kept as the record of what
-> changed and why. **NEXT: merge `feat/platform-foundation` → `master`** (needs
-> Josh's go-ahead), then Plan 2. One caveat: the batch-3 Electron hardening (CSP,
-> nav guards, single-instance lock) is verified headlessly but hasn't been exercised
-> in a live launch — do one permission-gated `electron:dev` smoke test before or
-> right after merging.
+> **UPDATE 2026-07-16 (later session): Plan 1 is CLOSED.** All 23 review findings
+> below are FIXED across commits `177909d` `7012aaa` `c171b6a` `d97338d` `5b081cc`
+> `d200fe8`; the batch lists below are kept as the record of what changed and why.
+> With Josh's permission the hardened app was then re-verified live — production
+> path 7/7 (`scripts/smoke-prod.mjs`, CSP + nav guards) and full acceptance drive
+> 13/13 — and **`feat/platform-foundation` was merged into `master`** (`5bc2a1c`).
+> Suite on master: 55 passing (15 files), all typechecks clean.
+> **NEXT: Plan 2** (component library + diagrams; see README "What comes after
+> Plan 1"), which is also where deep academic content authoring begins.
 
 **Project:** Offline-first Electron + React 19 + TS 7 learning app ("Advanced Diploma in Personal Training Science and Coaching"). End user: Josh's wife, on a **MacBook**. Dev machine: Windows 11.
 **Branch:** `feat/platform-foundation` (NOT merged to `master`).
