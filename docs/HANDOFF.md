@@ -1,5 +1,14 @@
 # Handoff — resume here (written 2026-07-16, model-agnostic: usable by any AI assistant or human)
 
+> **UPDATE 2026-07-16 (night): Plan 2 MERGED to master (4821b74, live-verified 19/19).**
+> **Plan 3 implemented on `feat/spaced-repetition`** (plan doc:
+> `docs/plans/2026-07-16-spaced-repetition-assessment.md`): recall scheduler
+> (3/7/14/90-day ladder, relearn-on-lapse), /review surface + Home due-count,
+> mastery gates (80%, non-offsettable safetyCritical questions, catalog shows
+> mastery % / needs-review). Progress format still v1 (recall map is optional).
+> Suite 111 green incl. a clock-advance loop test. Remaining: review, merge
+> sign-off. Then Plan 4 (dashboard/reference/settings).
+>
 > **UPDATE 2026-07-16 (evening): Plan 2 is implemented on `feat/component-library`**
 > (plan doc: `docs/plans/2026-07-16-component-library.md`). All nine new component
 > types + SVG diagram registry + APT 501.1 authored to the full 12-component spine

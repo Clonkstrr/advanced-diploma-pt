@@ -7,7 +7,8 @@ An offline, interactive, university-level course application. The learner works 
 ## Status (as of 2026-07-16)
 
 **Plan 1 (Platform Foundation): complete, verified, review-hardened, merged to `master`.**
-**Plan 2 (Component Library & Diagrams): implemented on `feat/component-library`** — all nine new engine component types (visual, worked example, classification, numeric lab, error-ID, branching case, evidence appraisal, recall set, teach-back) plus the in-code SVG diagram registry, and **APT 501.1 authored to the full 12-component lesson spine** (16 components, completable end-to-end in tests). Pending: live e2e drive (permission-gated), review, merge.
+**Plan 2 (Component Library & Diagrams): complete, verified live (19/19), merged to `master`** — all nine new engine component types plus the in-code SVG diagram registry, and APT 501.1 authored to the full 12-component lesson spine (16 components).
+**Plan 3 (Spaced Repetition & Assessment): implemented on `feat/spaced-repetition`** — spaced-recall scheduler (3/7/14/90-day ladder with relearning on lapses), `/review` surface with Home due-count, and mastery gates (80% over gradeable components, non-offsettable safety-critical items, remediation flags in the catalog). Pending: review, merge.
 
 - ✅ Vite + React 19 + TypeScript toolchain, Vitest tests
 - ✅ Content schema (Zod, single source of truth, unique-id enforcement) + data-driven lesson model + APT 501 seed Unit 1 (fully authored, completable)

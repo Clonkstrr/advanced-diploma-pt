@@ -1,16 +1,20 @@
 import { createStore, type StoreApi } from 'zustand/vanilla';
-import type { ProgressState, UnitProgress, ComponentProgress } from '../types/progress';
+import type { ProgressState, UnitProgress, ComponentProgress, RecallRating } from '../types/progress';
 import { emptyProgress, isProgressState } from '../types/progress';
 import type { StorageAdapter } from '../storage/StorageAdapter';
 import { createDebouncedSaver } from './autosave';
+import { scheduleFromRatings, gradeReview } from './recall';
 
 export interface ProgressActions {
   state: ProgressState;
+  now: () => string; // the store's injected clock, exposed for due-date queries
   hydrate: () => Promise<void>;
   recordAnswers: (courseId: string, unitId: string, componentId: string,
     answers: Record<string, string[]>, score: number) => void;
   completeComponent: (courseId: string, unitId: string, componentId: string) => void;
   setLocation: (courseId: string, unitId: string, componentId: string) => void;
+  scheduleRecall: (courseId: string, unitId: string, ratings: Record<string, RecallRating>) => void;
+  reviewCard: (key: string, rating: RecallRating) => void;
   flush: () => Promise<void>;
 }
 
@@ -40,6 +44,7 @@ export function createProgressStore(
 
     return {
       state: emptyProgress(now()),
+      now,
       hydrate: async () => {
         try {
           const loaded = await adapter.loadProgress();
@@ -77,6 +82,14 @@ export function createProgressStore(
         }),
       setLocation: (courseId, unitId, componentId) =>
         commit((d) => { d.lastLocation = { courseId, unitId, componentId }; }),
+      scheduleRecall: (courseId, unitId, ratings) =>
+        commit((d) => {
+          d.recall = scheduleFromRatings(d.recall ?? {}, courseId, unitId, ratings, now());
+        }),
+      reviewCard: (key, rating) =>
+        commit((d) => {
+          d.recall = gradeReview(d.recall ?? {}, key, rating, now());
+        }),
       flush: () => saver.flush(),
     };
   });

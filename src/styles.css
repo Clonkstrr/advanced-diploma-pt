@@ -30,7 +30,7 @@ button:disabled { opacity:.5; cursor:not-allowed; }
 
 /* Plan 2 components share the card treatment */
 .visual, .worked-example, .classification, .numeric-lab, .error-id,
-.branching-case, .evidence-appraisal, .recall-set, .teach-back {
+.branching-case, .evidence-appraisal, .recall-set, .teach-back, .review .card {
   background:var(--card); border:1px solid var(--line); border-radius:12px;
   padding:18px 20px; margin:16px 0; }
 .diagram { color:var(--fg); max-width:100%; height:auto; }
@@ -62,3 +62,5 @@ textarea { width:100%; min-height:120px; }
 .rate { display:flex; gap:10px; }
 .expected { color:#b3261e; font-size:.9rem; }
 .hierarchy { color:var(--muted); font-size:.92rem; }
+.review-due { display:inline-block; border:1px solid var(--accent); color:var(--accent);
+  padding:6px 12px; border-radius:8px; text-decoration:none; }
