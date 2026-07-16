@@ -6,6 +6,9 @@ import { OutcomesBlock } from './components/OutcomesBlock';
 import { QuestionSet } from './components/QuestionSet';
 import { Visual } from './components/Visual';
 import { WorkedExample } from './components/WorkedExample';
+import { Classification } from './components/Classification';
+import { NumericLab } from './components/NumericLab';
+import { ErrorId } from './components/ErrorId';
 
 function startIndex(components: UnitComponent[], lastComponentId?: string): number {
   if (!lastComponentId) return 0;
@@ -68,6 +71,12 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
   };
   const back = () => setIndex((i) => Math.max(i - 1, 0));
 
+  // Shared completion handler for every graded component type.
+  const onGraded = ({ answers, score }: { answers: Record<string, string[]>; score: number }) => {
+    recordAnswers(course.id, unit.id, current.id, answers, score);
+    completeComponent(course.id, unit.id, current.id);
+  };
+
   // Exhaustive over UnitComponent; the default only survives for data from a
   // newer content version than this build understands.
   const renderCurrent = (): ReactNode => {
@@ -84,10 +93,7 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
             questions={current.questions}
             initialAnswers={unitProgress?.components[current.id]?.answers}
             initialSubmitted={unitProgress?.components[current.id]?.completed}
-            onComplete={({ answers, score }) => {
-              recordAnswers(course.id, unit.id, current.id, answers, score);
-              completeComponent(course.id, unit.id, current.id);
-            }}
+            onComplete={onGraded}
           />
         );
       case 'visual':
@@ -101,11 +107,32 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
             steps={current.steps} takeaway={current.takeaway}
             initialRevealed={unitProgress?.components[current.id]?.completed} />
         );
+      case 'classification':
+        return (
+          <Classification key={current.id} title={current.title}
+            instructions={current.instructions} buckets={current.buckets} items={current.items}
+            initialAnswers={unitProgress?.components[current.id]?.answers}
+            initialSubmitted={unitProgress?.components[current.id]?.completed}
+            onComplete={onGraded} />
+        );
+      case 'numericLab':
+        return (
+          <NumericLab key={current.id} title={current.title} brief={current.brief}
+            fields={current.fields} solution={current.solution}
+            initialAnswers={unitProgress?.components[current.id]?.answers}
+            initialSubmitted={unitProgress?.components[current.id]?.completed}
+            onComplete={onGraded} />
+        );
+      case 'errorId':
+        return (
+          <ErrorId key={current.id} title={current.title} brief={current.brief}
+            document={current.document} findings={current.findings}
+            initialAnswers={unitProgress?.components[current.id]?.answers}
+            initialSubmitted={unitProgress?.components[current.id]?.completed}
+            onComplete={onGraded} />
+        );
       // Plan 2 renderers land one per task; until then these fall through to
       // the placeholder so the schema/type work can ship independently.
-      case 'classification':
-      case 'numericLab':
-      case 'errorId':
       case 'branchingCase':
       case 'evidenceAppraisal':
       case 'recallSet':
