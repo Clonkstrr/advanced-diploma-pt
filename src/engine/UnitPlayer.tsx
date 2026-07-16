@@ -17,6 +17,15 @@ const completesOn: { [K in UnitComponent['type']]: 'view' | 'submit' } = {
   outcomes: 'view',
   concept: 'view',
   questionSet: 'submit',
+  visual: 'view',
+  workedExample: 'view',
+  classification: 'submit',
+  numericLab: 'submit',
+  errorId: 'submit',
+  branchingCase: 'submit',
+  evidenceAppraisal: 'submit',
+  recallSet: 'submit',
+  teachBack: 'submit',
 };
 
 export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
@@ -79,6 +88,18 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
             }}
           />
         );
+      // Plan 2 renderers land one per task; until then these fall through to
+      // the placeholder so the schema/type work can ship independently.
+      case 'visual':
+      case 'workedExample':
+      case 'classification':
+      case 'numericLab':
+      case 'errorId':
+      case 'branchingCase':
+      case 'evidenceAppraisal':
+      case 'recallSet':
+      case 'teachBack':
+        return <p className="unsupported">This part of the lesson isn’t available yet.</p>;
       default: {
         const unhandled: never = current;
         void unhandled;
