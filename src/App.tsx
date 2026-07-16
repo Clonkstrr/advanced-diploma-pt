@@ -9,7 +9,8 @@ function UnitRoute() {
   const { courseId = '', unitId = '' } = useParams();
   const found = getUnit(courseId, unitId);
   if (!found?.course) return <p>Unit not found.</p>;
-  return <UnitPlayer course={found.course} unit={found.unit} />;
+  // Remount the player per unit so its index state can never outlive the unit.
+  return <UnitPlayer key={`${courseId}/${unitId}`} course={found.course} unit={found.unit} />;
 }
 
 export { Layout, Home, Catalog, UnitRoute };

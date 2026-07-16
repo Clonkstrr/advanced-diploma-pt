@@ -32,6 +32,15 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
     setLocation(course.id, unit.id, current.id);
   }, [course.id, unit.id, current.id, setLocation]);
 
+  // Completion normally fires on Next, so a unit ending in a non-interactive
+  // component could otherwise never reach 100%.
+  const isLast = index === unit.components.length - 1;
+  useEffect(() => {
+    if (isLast && (current.type === 'concept' || current.type === 'outcomes')) {
+      completeComponent(course.id, unit.id, current.id);
+    }
+  }, [isLast, course.id, unit.id, current.id, current.type, completeComponent]);
+
   const next = () => {
     if (current.type === 'concept' || current.type === 'outcomes') {
       completeComponent(course.id, unit.id, current.id);
@@ -53,10 +62,13 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
       </header>
 
       <div className="component">
-        {current.type === 'concept' && <ConceptBlock heading={current.heading} body={current.body} />}
-        {current.type === 'outcomes' && <OutcomesBlock outcomes={current.outcomes} />}
+        {/* key ensures per-component state (e.g. a set's answers) never survives
+            into the next component of the same type */}
+        {current.type === 'concept' && <ConceptBlock key={current.id} heading={current.heading} body={current.body} />}
+        {current.type === 'outcomes' && <OutcomesBlock key={current.id} outcomes={current.outcomes} />}
         {current.type === 'questionSet' && (
           <QuestionSet
+            key={current.id}
             title={current.title}
             questions={current.questions}
             initialAnswers={unitProgress?.components[current.id]?.answers}
