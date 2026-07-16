@@ -1,3 +1,17 @@
+# Plan verification log
+
+## Plan 2 verification (2026-07-16)
+
+- `npm test`: PASS (90 tests, 25 files) · `npm run build`: PASS · electron tsc: PASS
+- Live e2e drive (`scripts/e2e-drive.mjs`, isolated temp profile, run with Josh's permission): **19/19** —
+  full 16-component spine driven end-to-end in the real Electron app: 5-question pretest,
+  outcomes, five concepts, annotated SVG visual, worked example, classification lab 8/8,
+  branching case best-path 3/3, error-ID audit 7/7, recall set 9/9, quiz 7/7 (all four
+  cognitive levels), then **close → relaunch → exact resume on the graded quiz** (score
+  retained, answers locked), then teach-back 4/4 and cumulative review 3/3 to 16/16 and
+  the catalog ✓. Screenshots inspected (`e2e-shots/`): decision-tree SVG and case
+  outcome render correctly in light theme.
+
 # Plan 1 verification
 
 - Date: 2026-07-15

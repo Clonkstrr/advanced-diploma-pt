@@ -31,11 +31,42 @@ export interface Question {
   explanation?: string;   // shown after answering
 }
 
-// Discriminated union of component payloads implemented in Plan 1.
+// Plan 2 component payload pieces.
+export interface Callout { id: string; label: string; text: string; }
+export interface WorkedStep { id: string; title: string; reasoning: string; }
+export interface Bucket { id: string; label: string; }
+export interface ClassificationItem { id: string; text: string; bucketId: string; rationale: string; }
+export interface NumericField { id: string; label: string; unit?: string; answer: number; tolerance: number; }
+export interface Finding { id: string; text: string; isError: boolean; rationale: string; }
+export interface CaseChoice {
+  id: string; text: string;
+  to: string | null;                          // null = terminal choice (case ends)
+  quality: 'best' | 'acceptable' | 'poor';
+  feedback: string;
+}
+export interface CaseNode { id: string; situation: string; choices: CaseChoice[]; }
+export interface Claim {
+  id: string; claim: string; evidenceDescription: string;
+  correctLevel: string;                       // one of the component's hierarchy entries
+  rationale: string;
+}
+export interface RecallCard { id: string; front: string; back: string; }
+export interface RubricItem { id: string; text: string; }
+
+// Discriminated union of all engine component payloads.
 export type UnitComponent =
   | { type: 'outcomes'; id: string; outcomes: LearningOutcome[] }
   | { type: 'concept'; id: string; heading: string; body: string }  // body is plain paragraphs separated by blank lines
-  | { type: 'questionSet'; id: string; role: 'pretest' | 'quiz'; title: string; questions: Question[] };
+  | { type: 'questionSet'; id: string; role: 'pretest' | 'quiz' | 'cumulative'; title: string; questions: Question[] }
+  | { type: 'visual'; id: string; title: string; diagramId: string; caption: string; callouts: Callout[] }
+  | { type: 'workedExample'; id: string; title: string; scenario: string; steps: WorkedStep[]; takeaway: string }
+  | { type: 'classification'; id: string; title: string; instructions: string; buckets: Bucket[]; items: ClassificationItem[] }
+  | { type: 'numericLab'; id: string; title: string; brief: string; fields: NumericField[]; solution: string }
+  | { type: 'errorId'; id: string; title: string; brief: string; document: string; findings: Finding[] }
+  | { type: 'branchingCase'; id: string; title: string; brief: string; startNodeId: string; nodes: CaseNode[] }
+  | { type: 'evidenceAppraisal'; id: string; title: string; brief: string; hierarchy: string[]; claims: Claim[]; briefPrompt: string; modelBrief: string }
+  | { type: 'recallSet'; id: string; title: string; cards: RecallCard[] }
+  | { type: 'teachBack'; id: string; title: string; prompt: string; modelAnswer: string; rubric: RubricItem[] };
 
 export interface Unit {
   id: string;

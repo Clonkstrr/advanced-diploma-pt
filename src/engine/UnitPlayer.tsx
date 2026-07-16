@@ -4,6 +4,15 @@ import { useProgress } from '../state/StoreProvider';
 import { ConceptBlock } from './components/ConceptBlock';
 import { OutcomesBlock } from './components/OutcomesBlock';
 import { QuestionSet } from './components/QuestionSet';
+import { Visual } from './components/Visual';
+import { WorkedExample } from './components/WorkedExample';
+import { Classification } from './components/Classification';
+import { NumericLab } from './components/NumericLab';
+import { ErrorId } from './components/ErrorId';
+import { BranchingCase } from './components/BranchingCase';
+import { EvidenceAppraisal } from './components/EvidenceAppraisal';
+import { RecallSet } from './components/RecallSet';
+import { TeachBack } from './components/TeachBack';
 
 function startIndex(components: UnitComponent[], lastComponentId?: string): number {
   if (!lastComponentId) return 0;
@@ -17,6 +26,15 @@ const completesOn: { [K in UnitComponent['type']]: 'view' | 'submit' } = {
   outcomes: 'view',
   concept: 'view',
   questionSet: 'submit',
+  visual: 'view',
+  workedExample: 'view',
+  classification: 'submit',
+  numericLab: 'submit',
+  errorId: 'submit',
+  branchingCase: 'submit',
+  evidenceAppraisal: 'submit',
+  recallSet: 'submit',
+  teachBack: 'submit',
 };
 
 export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
@@ -57,6 +75,12 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
   };
   const back = () => setIndex((i) => Math.max(i - 1, 0));
 
+  // Shared completion handler for every graded component type.
+  const onGraded = ({ answers, score }: { answers: Record<string, string[]>; score: number }) => {
+    recordAnswers(course.id, unit.id, current.id, answers, score);
+    completeComponent(course.id, unit.id, current.id);
+  };
+
   // Exhaustive over UnitComponent; the default only survives for data from a
   // newer content version than this build understands.
   const renderCurrent = (): ReactNode => {
@@ -73,11 +97,75 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
             questions={current.questions}
             initialAnswers={unitProgress?.components[current.id]?.answers}
             initialSubmitted={unitProgress?.components[current.id]?.completed}
-            onComplete={({ answers, score }) => {
-              recordAnswers(course.id, unit.id, current.id, answers, score);
-              completeComponent(course.id, unit.id, current.id);
-            }}
+            onComplete={onGraded}
           />
+        );
+      case 'visual':
+        return (
+          <Visual key={current.id} title={current.title} diagramId={current.diagramId}
+            caption={current.caption} callouts={current.callouts} />
+        );
+      case 'workedExample':
+        return (
+          <WorkedExample key={current.id} title={current.title} scenario={current.scenario}
+            steps={current.steps} takeaway={current.takeaway}
+            initialRevealed={unitProgress?.components[current.id]?.completed} />
+        );
+      case 'classification':
+        return (
+          <Classification key={current.id} title={current.title}
+            instructions={current.instructions} buckets={current.buckets} items={current.items}
+            initialAnswers={unitProgress?.components[current.id]?.answers}
+            initialSubmitted={unitProgress?.components[current.id]?.completed}
+            onComplete={onGraded} />
+        );
+      case 'numericLab':
+        return (
+          <NumericLab key={current.id} title={current.title} brief={current.brief}
+            fields={current.fields} solution={current.solution}
+            initialAnswers={unitProgress?.components[current.id]?.answers}
+            initialSubmitted={unitProgress?.components[current.id]?.completed}
+            onComplete={onGraded} />
+        );
+      case 'errorId':
+        return (
+          <ErrorId key={current.id} title={current.title} brief={current.brief}
+            document={current.document} findings={current.findings}
+            initialAnswers={unitProgress?.components[current.id]?.answers}
+            initialSubmitted={unitProgress?.components[current.id]?.completed}
+            onComplete={onGraded} />
+        );
+      case 'branchingCase':
+        return (
+          <BranchingCase key={current.id} title={current.title} brief={current.brief}
+            startNodeId={current.startNodeId} nodes={current.nodes}
+            initialAnswers={unitProgress?.components[current.id]?.answers}
+            initialSubmitted={unitProgress?.components[current.id]?.completed}
+            onComplete={onGraded} />
+        );
+      case 'evidenceAppraisal':
+        return (
+          <EvidenceAppraisal key={current.id} title={current.title} brief={current.brief}
+            hierarchy={current.hierarchy} claims={current.claims}
+            briefPrompt={current.briefPrompt} modelBrief={current.modelBrief}
+            initialAnswers={unitProgress?.components[current.id]?.answers}
+            initialSubmitted={unitProgress?.components[current.id]?.completed}
+            onComplete={onGraded} />
+        );
+      case 'recallSet':
+        return (
+          <RecallSet key={current.id} title={current.title} cards={current.cards}
+            initialAnswers={unitProgress?.components[current.id]?.answers}
+            initialSubmitted={unitProgress?.components[current.id]?.completed}
+            onComplete={onGraded} />
+        );
+      case 'teachBack':
+        return (
+          <TeachBack key={current.id} title={current.title} prompt={current.prompt}
+            modelAnswer={current.modelAnswer} rubric={current.rubric}
+            initialAnswers={unitProgress?.components[current.id]?.answers}
+            initialSubmitted={unitProgress?.components[current.id]?.completed}
+            onComplete={onGraded} />
         );
       default: {
         const unhandled: never = current;

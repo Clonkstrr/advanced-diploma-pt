@@ -1,5 +1,14 @@
 # Handoff — resume here (written 2026-07-16, model-agnostic: usable by any AI assistant or human)
 
+> **UPDATE 2026-07-16 (evening): Plan 2 is implemented on `feat/component-library`**
+> (plan doc: `docs/plans/2026-07-16-component-library.md`). All nine new component
+> types + SVG diagram registry + APT 501.1 authored to the full 12-component spine
+> (16 components; suite ~90 green incl. a full-unit integration walk).
+> Deferred by design: simulators, program builder (later plans, with the courses
+> that use them). Remaining before merge: live e2e drive (`scripts/e2e-drive.mjs`,
+> rewritten for the 16-component flow — needs Josh's permission to run), code
+> review, merge sign-off. Then Plan 3 (spaced repetition & assessment).
+>
 > **UPDATE 2026-07-16 (later session): Plan 1 is CLOSED.** All 23 review findings
 > below are FIXED across commits `177909d` `7012aaa` `c171b6a` `d97338d` `5b081cc`
 > `d200fe8`; the batch lists below are kept as the record of what changed and why.
