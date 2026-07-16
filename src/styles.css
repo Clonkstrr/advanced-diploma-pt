@@ -27,3 +27,38 @@ button { font:inherit; padding:8px 16px; border-radius:8px; border:1px solid var
   background:var(--card); color:var(--fg); cursor:pointer; }
 button:disabled { opacity:.5; cursor:not-allowed; }
 .level { font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color:var(--accent); margin-right:6px; }
+
+/* Plan 2 components share the card treatment */
+.visual, .worked-example, .classification, .numeric-lab, .error-id,
+.branching-case, .evidence-appraisal, .recall-set, .teach-back {
+  background:var(--card); border:1px solid var(--line); border-radius:12px;
+  padding:18px 20px; margin:16px 0; }
+.diagram { color:var(--fg); max-width:100%; height:auto; }
+figure { margin:12px 0; } figcaption { color:var(--muted); font-size:.9rem; }
+.callouts li, .steps li { margin:8px 0; }
+.steps h3 { margin:0 0 4px; font-size:1.02rem; }
+.takeaway, .solution, .model-brief, .model-answer {
+  border-left:3px solid var(--accent); padding:8px 12px; margin:14px 0;
+  background:color-mix(in srgb, var(--accent) 7%, transparent); border-radius:0 8px 8px 0; }
+.score { color:var(--accent); font-weight:600; }
+.items li, .findings li, .claims li { border:1px solid var(--line); border-radius:10px;
+  padding:10px 14px; margin:10px 0; list-style:none; }
+.items, .findings, .claims, .rubric { padding-left:0; }
+.items li.correct, .findings li.correct, .claims li.correct,
+.decisions li.best { border-color:#2e7d54; }
+.items li.incorrect, .findings li.incorrect, .claims li.incorrect,
+.decisions li.poor { border-color:#b3261e; }
+.decisions li.acceptable { border-color:#b58a2c; }
+select, textarea, input[type="number"] { font:inherit; color:var(--fg); background:var(--bg);
+  border:1px solid var(--line); border-radius:8px; padding:6px 10px; margin-top:6px; display:block; }
+textarea { width:100%; min-height:120px; }
+.document { border:1px dashed var(--line); border-radius:10px; padding:12px 16px;
+  font-style:italic; color:var(--muted); margin:12px 0; }
+.situation { font-weight:600; }
+.choices { display:flex; flex-direction:column; gap:10px; margin:12px 0; }
+.choices button { text-align:left; }
+.card .front { font-weight:600; font-size:1.05rem; }
+.card .back { border-top:1px solid var(--line); padding-top:10px; }
+.rate { display:flex; gap:10px; }
+.expected { color:#b3261e; font-size:.9rem; }
+.hierarchy { color:var(--muted); font-size:.92rem; }
