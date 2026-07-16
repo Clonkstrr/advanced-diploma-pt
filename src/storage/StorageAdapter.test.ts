@@ -18,6 +18,17 @@ describe('StorageAdapter', () => {
     expect(loaded?.courses['apt501']).toBeDefined();
   });
 
+  it('a second connection to the same database sees data saved by the first', async () => {
+    // headless stand-in for the close-and-relaunch path
+    const name = 'twoconn-' + Math.random().toString(36).slice(2);
+    const a = new StorageAdapter(name);
+    const p = emptyProgress('2026-07-15T00:00:00.000Z');
+    p.courses['apt501'] = { units: {} };
+    await a.saveProgress(p);
+    const b = new StorageAdapter(name);
+    expect((await b.loadProgress())?.courses['apt501']).toBeDefined();
+  });
+
   it('saves and reloads a backup blob under its own key', async () => {
     const blob = { version: 999, courses: { legacy: { units: {} } }, updatedAt: 'x' };
     await store.saveBackup('progress.v999.bak', blob);

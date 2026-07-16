@@ -52,9 +52,14 @@ describe('UnitPlayer', () => {
 
   it('records location as the learner advances (for resume)', () => {
     const store = renderUnit();
-    // advancing writes lastLocation
+    const { unit } = getUnit('apt501', 'apt501-u1')!;
     fireEvent.click(screen.getByRole('button', { name: /next/i }));
-    expect(store.getState().state.lastLocation?.unitId).toBe('apt501-u1');
+    // the location must actually advance to the second component…
+    expect(store.getState().state.lastLocation).toEqual({
+      courseId: 'apt501', unitId: 'apt501-u1', componentId: unit.components[1].id,
+    });
+    // …and the first component must no longer be on screen
+    expect(screen.queryByText('Before we begin')).not.toBeInTheDocument();
   });
 
   it('resumes on the exact component from lastLocation, not just lastComponentId', () => {
@@ -65,6 +70,23 @@ describe('UnitPlayer', () => {
     render(<StoreProvider store={store}><UnitPlayer course={course!} unit={unit} /></StoreProvider>);
     expect(screen.getByText((conceptComponent as { heading: string }).heading)).toBeInTheDocument();
     expect(screen.queryByText('Before we begin')).not.toBeInTheDocument();
+  });
+
+  it('resumes from the unit\'s own lastComponentId when lastLocation is for another unit', () => {
+    const store = createProgressStore(new StorageAdapter('up-' + Math.random()), () => 'now');
+    const { course, unit } = getUnit('apt501', 'apt501-u1')!;
+    const concept = unit.components.find((c) => c.type === 'concept')!;
+    store.getState().completeComponent('apt501', 'apt501-u1', concept.id);
+    store.getState().setLocation('apt501', 'some-other-unit', 'elsewhere');
+    render(<StoreProvider store={store}><UnitPlayer course={course!} unit={unit} /></StoreProvider>);
+    expect(screen.getByText((concept as { heading: string }).heading)).toBeInTheDocument();
+  });
+
+  it('shows a placeholder for a component type it cannot render yet', () => {
+    renderSynthetic([
+      { type: 'video', id: 'v1' } as unknown as Unit['components'][number],
+    ]);
+    expect(screen.getByText(/isn.t available yet/)).toBeInTheDocument();
   });
 
   it('does not leak submitted state between adjacent question sets', () => {
