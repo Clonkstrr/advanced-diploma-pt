@@ -1,0 +1,15 @@
+appId: com.josh.advdiploma
+productName: Advanced Diploma PT
+directories:
+  output: release
+files:
+  - dist/**/*
+  - dist-electron/**/*
+mac:
+  target:
+    - dmg
+    - zip
+  category: public.app-category.education
+win:
+  target:
+    - dir
