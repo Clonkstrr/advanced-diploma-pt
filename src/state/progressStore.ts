@@ -1,6 +1,6 @@
 import { createStore, type StoreApi } from 'zustand/vanilla';
 import type { ProgressState, UnitProgress, ComponentProgress } from '../types/progress';
-import { emptyProgress, CURRENT_PROGRESS_VERSION } from '../types/progress';
+import { emptyProgress, isProgressState } from '../types/progress';
 import type { StorageAdapter } from '../storage/StorageAdapter';
 import { createDebouncedSaver } from './autosave';
 
@@ -41,8 +41,25 @@ export function createProgressStore(
     return {
       state: emptyProgress(now()),
       hydrate: async () => {
-        const loaded = await adapter.loadProgress();
-        if (loaded && loaded.version === CURRENT_PROGRESS_VERSION) set({ state: loaded });
+        try {
+          const loaded = await adapter.loadProgress();
+          if (loaded == null) return;
+          if (isProgressState(loaded)) {
+            set({ state: loaded });
+            return;
+          }
+          // Unknown version or malformed shape: the next write-through would
+          // destroy this blob, so stash it under a backup key first.
+          const version = (loaded as { version?: unknown }).version;
+          const backupKey = `progress.v${typeof version === 'number' ? version : 'unknown'}.bak`;
+          await adapter.saveBackup(backupKey, loaded);
+          console.error(
+            `Stored progress was not recognised (version ${String(version)}); ` +
+            `backed it up to "${backupKey}" and starting fresh.`,
+          );
+        } catch (err) {
+          console.error('Failed to restore saved progress; continuing with in-memory state.', err);
+        }
       },
       recordAnswers: (courseId, unitId, componentId, answers, score) =>
         commit((d) => {

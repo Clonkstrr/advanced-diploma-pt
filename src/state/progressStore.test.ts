@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { StorageAdapter } from '../storage/StorageAdapter';
 import { createProgressStore } from './progressStore';
 
@@ -36,5 +36,41 @@ describe('progressStore', () => {
     const b = createProgressStore(adapter, () => '2026-07-15T00:00:00.000Z');
     await b.getState().hydrate();
     expect(b.getState().state.lastLocation?.componentId).toBe('apt501-u1-c2');
+  });
+
+  it('hydrate resolves and keeps empty in-memory state when loading fails', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const broken = {
+      loadProgress: () => Promise.reject(new Error('idb unavailable')),
+      saveProgress: () => Promise.resolve(),
+    } as unknown as StorageAdapter;
+    const store = createProgressStore(broken, () => '2026-07-15T00:00:00.000Z');
+    await expect(store.getState().hydrate()).resolves.toBeUndefined();
+    expect(store.getState().state.courses).toEqual({});
+    expect(errorSpy).toHaveBeenCalled();
+    errorSpy.mockRestore();
+  });
+
+  it('hydrate backs up an unrecognised-version blob instead of adopting it', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const { adapter, store } = ctx;
+    const oldBlob = { version: 999, courses: { legacy: { units: {} } }, updatedAt: 'x' };
+    await adapter.saveProgress(oldBlob as never);
+    await store.getState().hydrate();
+    expect(store.getState().state.courses).toEqual({});
+    expect(await adapter.loadBackup('progress.v999.bak')).toEqual(oldBlob);
+    expect(errorSpy).toHaveBeenCalled();
+    errorSpy.mockRestore();
+  });
+
+  it('hydrate backs up a malformed blob even when its version matches', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const { adapter, store } = ctx;
+    const badBlob = { version: 1, updatedAt: 42 }; // no courses, wrong updatedAt type
+    await adapter.saveProgress(badBlob as never);
+    await store.getState().hydrate();
+    expect(store.getState().state.courses).toEqual({});
+    expect(await adapter.loadBackup('progress.v1.bak')).toEqual(badBlob);
+    errorSpy.mockRestore();
   });
 });

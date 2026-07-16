@@ -25,3 +25,15 @@ export const CURRENT_PROGRESS_VERSION = 1;
 export function emptyProgress(nowIso: string): ProgressState {
   return { version: CURRENT_PROGRESS_VERSION, courses: {}, updatedAt: nowIso };
 }
+
+// Structural check for blobs loaded from storage: anything that fails this must
+// be backed up rather than adopted or overwritten.
+export function isProgressState(value: unknown): value is ProgressState {
+  if (typeof value !== 'object' || value === null) return false;
+  const v = value as Record<string, unknown>;
+  return (
+    v.version === CURRENT_PROGRESS_VERSION &&
+    typeof v.courses === 'object' && v.courses !== null &&
+    typeof v.updatedAt === 'string'
+  );
+}

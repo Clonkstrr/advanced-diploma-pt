@@ -5,3 +5,4 @@ e2e-shots/
 release/
 .DS_Store
 *.log
+.ask-pro/

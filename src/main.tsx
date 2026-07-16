@@ -21,7 +21,13 @@ const router = createHashRouter([
 ]);
 
 async function boot() {
-  await store.getState().hydrate();
+  // hydrate() contains its own error handling, but nothing before render is
+  // allowed to leave the window permanently blank — so guard here too.
+  try {
+    await store.getState().hydrate();
+  } catch (err) {
+    console.error('Boot hydration failed; starting with in-memory state.', err);
+  }
   // Flush pending saves when the window is hidden or closed (belt-and-braces).
   // Note: the beforeunload flush is best-effort only — the async IndexedDB write it
   // triggers may not finish before an abrupt close. The real safety net is that every

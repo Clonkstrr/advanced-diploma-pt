@@ -10,13 +10,28 @@ export function createDebouncedSaver<T>(
   let timer: ReturnType<typeof setTimeout> | null = null;
   let pending: T | undefined;
   let hasPending = false;
+  // All saves are chained so they never overlap and flush() can await whatever
+  // is in flight. Failures are contained per-link, so the chain never rejects.
+  let chain: Promise<void> = Promise.resolve();
 
-  const run = async () => {
-    if (!hasPending) return;
-    const value = pending as T;
-    hasPending = false;
-    pending = undefined;
-    await save(value);
+  const run = (): Promise<void> => {
+    chain = chain.then(async () => {
+      if (!hasPending) return;
+      const value = pending as T;
+      hasPending = false;
+      pending = undefined;
+      try {
+        await save(value);
+      } catch (err) {
+        console.error('Autosave failed; keeping the value pending for retry.', err);
+        // Restore for retry unless a newer value arrived while this save ran.
+        if (!hasPending) {
+          pending = value;
+          hasPending = true;
+        }
+      }
+    });
+    return chain;
   };
 
   const saver = ((value: T) => {
@@ -26,9 +41,9 @@ export function createDebouncedSaver<T>(
     timer = setTimeout(() => { timer = null; void run(); }, delayMs);
   }) as DebouncedSaver<T>;
 
-  saver.flush = async () => {
+  saver.flush = () => {
     if (timer) { clearTimeout(timer); timer = null; }
-    await run();
+    return run();
   };
 
   return saver;
