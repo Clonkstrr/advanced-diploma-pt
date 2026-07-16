@@ -23,6 +23,10 @@ const router = createHashRouter([
 async function boot() {
   await store.getState().hydrate();
   // Flush pending saves when the window is hidden or closed (belt-and-braces).
+  // Note: the beforeunload flush is best-effort only — the async IndexedDB write it
+  // triggers may not finish before an abrupt close. The real safety net is that every
+  // action already writes through (via the debounced saver) plus the visibilitychange
+  // flush, which fires reliably before beforeunload in practice.
   const flush = () => { void store.getState().flush(); };
   window.addEventListener('visibilitychange', flush);
   window.addEventListener('beforeunload', flush);

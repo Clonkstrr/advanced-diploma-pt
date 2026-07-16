@@ -26,4 +26,20 @@ describe('QuestionSet', () => {
     fireEvent.click(screen.getByRole('button', { name: /submit/i }));
     expect(onComplete).toHaveBeenCalledWith({ answers: { q1: ['b'] }, score: 0 });
   });
+
+  it('restores saved answers and graded state on revisit', () => {
+    const onComplete = vi.fn();
+    render(
+      <QuestionSet
+        title="Quiz"
+        questions={questions}
+        onComplete={onComplete}
+        initialAnswers={{ q1: ['a'] }}
+        initialSubmitted={true}
+      />,
+    );
+    expect(screen.getByLabelText(/^A/)).toBeChecked();
+    expect(screen.getByText('Yes A')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /submit/i })).not.toBeInTheDocument();
+  });
 });

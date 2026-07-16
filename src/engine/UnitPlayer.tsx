@@ -18,15 +18,26 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
   const savedLast = useProgress(
     (s) => s.state.courses[course.id]?.units[unit.id]?.lastComponentId,
   );
+  const lastLoc = useProgress((s) => s.state.lastLocation);
+  const unitProgress = useProgress((s) => s.state.courses[course.id]?.units[unit.id]);
 
-  const [index, setIndex] = useState(() => startIndex(unit.components, savedLast));
+  const resumeId =
+    lastLoc && lastLoc.courseId === course.id && lastLoc.unitId === unit.id
+      ? lastLoc.componentId
+      : savedLast;
+  const [index, setIndex] = useState(() => startIndex(unit.components, resumeId));
   const current = unit.components[index];
 
   useEffect(() => {
     setLocation(course.id, unit.id, current.id);
   }, [course.id, unit.id, current.id, setLocation]);
 
-  const next = () => setIndex((i) => Math.min(i + 1, unit.components.length - 1));
+  const next = () => {
+    if (current.type === 'concept' || current.type === 'outcomes') {
+      completeComponent(course.id, unit.id, current.id);
+    }
+    setIndex((i) => Math.min(i + 1, unit.components.length - 1));
+  };
   const back = () => setIndex((i) => Math.max(i - 1, 0));
 
   return (
@@ -48,11 +59,16 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
           <QuestionSet
             title={current.title}
             questions={current.questions}
+            initialAnswers={unitProgress?.components[current.id]?.answers}
+            initialSubmitted={unitProgress?.components[current.id]?.completed}
             onComplete={({ answers, score }) => {
               recordAnswers(course.id, unit.id, current.id, answers, score);
               completeComponent(course.id, unit.id, current.id);
             }}
           />
+        )}
+        {!['concept', 'outcomes', 'questionSet'].includes(current.type) && (
+          <p className="unsupported">This part of the lesson isn’t available yet.</p>
         )}
       </div>
 

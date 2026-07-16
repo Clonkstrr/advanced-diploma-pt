@@ -1,6 +1,6 @@
 import { createStore, type StoreApi } from 'zustand/vanilla';
 import type { ProgressState, UnitProgress, ComponentProgress } from '../types/progress';
-import { emptyProgress } from '../types/progress';
+import { emptyProgress, CURRENT_PROGRESS_VERSION } from '../types/progress';
 import type { StorageAdapter } from '../storage/StorageAdapter';
 import { createDebouncedSaver } from './autosave';
 
@@ -42,7 +42,7 @@ export function createProgressStore(
       state: emptyProgress(now()),
       hydrate: async () => {
         const loaded = await adapter.loadProgress();
-        if (loaded) set({ state: loaded });
+        if (loaded && loaded.version === CURRENT_PROGRESS_VERSION) set({ state: loaded });
       },
       recordAnswers: (courseId, unitId, componentId, answers, score) =>
         commit((d) => {

@@ -26,4 +26,14 @@ describe('UnitPlayer', () => {
     fireEvent.click(screen.getByRole('button', { name: /next/i }));
     expect(store.getState().state.lastLocation?.unitId).toBe('apt501-u1');
   });
+
+  it('resumes on the exact component from lastLocation, not just lastComponentId', () => {
+    const store = createProgressStore(new StorageAdapter('up-' + Math.random()), () => 'now');
+    const { course, unit } = getUnit('apt501', 'apt501-u1')!;
+    const conceptComponent = unit.components.find((c) => c.type === 'concept')!;
+    store.getState().setLocation('apt501', 'apt501-u1', conceptComponent.id);
+    render(<StoreProvider store={store}><UnitPlayer course={course!} unit={unit} /></StoreProvider>);
+    expect(screen.getByText((conceptComponent as { heading: string }).heading)).toBeInTheDocument();
+    expect(screen.queryByText('Before we begin')).not.toBeInTheDocument();
+  });
 });

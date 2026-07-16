@@ -5,11 +5,17 @@ import { gradeQuestion, gradeQuestionSet } from '../grading';
 export interface QuestionSetResult { answers: Record<string, string[]>; score: number; }
 
 export function QuestionSet(
-  { title, questions, onComplete }:
-  { title: string; questions: Question[]; onComplete: (r: QuestionSetResult) => void },
+  { title, questions, onComplete, initialAnswers, initialSubmitted }:
+  {
+    title: string;
+    questions: Question[];
+    onComplete: (r: QuestionSetResult) => void;
+    initialAnswers?: Record<string, string[]>;
+    initialSubmitted?: boolean;
+  },
 ) {
-  const [answers, setAnswers] = useState<Record<string, string[]>>({});
-  const [submitted, setSubmitted] = useState(false);
+  const [answers, setAnswers] = useState<Record<string, string[]>>(() => initialAnswers ?? {});
+  const [submitted, setSubmitted] = useState(() => initialSubmitted ?? false);
 
   const toggle = (q: Question, optionId: string) => {
     if (submitted) return;
@@ -57,7 +63,7 @@ export function QuestionSet(
         );
       })}
       {!submitted && (
-        <button onClick={submit} disabled={Object.keys(answers).length !== questions.length}>
+        <button onClick={submit} disabled={!questions.every((q) => (answers[q.id]?.length ?? 0) > 0)}>
           Submit answers
         </button>
       )}

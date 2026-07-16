@@ -13,11 +13,14 @@ export function Catalog() {
           <p>{c.description}</p>
           <ul>
             {c.units.map((u) => {
-              const done = state.courses[c.id]?.units[u.id]?.completed;
+              const up = state.courses[c.id]?.units[u.id];
+              // Full mastery-based completion gating lands in Plan 3; this is a simple read/answered indicator.
+              const allDone = !!up && u.components.every((cmp) => up.components[cmp.id]?.completed);
+              const started = !!up && u.components.some((cmp) => up.components[cmp.id]?.completed);
               return (
                 <li key={u.id}>
                   <Link to={`/course/${c.id}/unit/${u.id}`}>{u.code} — {u.title}</Link>
-                  {done ? ' ✓' : ''}
+                  {allDone ? ' ✓' : started ? ' · in progress' : ''}
                 </li>
               );
             })}
