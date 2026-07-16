@@ -285,7 +285,7 @@ export const unit01: Unit = {
     {
       type: 'questionSet', id: 'apt501-u1-quiz', role: 'quiz', title: 'Unit quiz',
       questions: [
-        { id: 'u1q1', kind: 'single', cognitive: 'analysis',
+        { id: 'u1q1', kind: 'single', cognitive: 'analysis', safetyCritical: true,
           prompt: 'A long-time client mentions new chest tightness during warm-ups this week. What does staying in scope require?',
           explanation: 'New chest tightness is a red flag that needs medical evaluation. Continuing to train through it would ignore a referral trigger.',
           options: [
@@ -362,7 +362,7 @@ export const unit01: Unit = {
     {
       type: 'questionSet', id: 'apt501-u1-cumulative', role: 'cumulative', title: 'Pulling it together',
       questions: [
-        { id: 'cu1', kind: 'single', cognitive: 'application',
+        { id: 'cu1', kind: 'single', cognitive: 'application', safetyCritical: true,
           prompt: 'Across everything in this unit: what is the FIRST check in every session decision, before any scope reasoning?',
           options: [
             { id: 'a', text: 'Red flags — symptoms or events that end the session and trigger referral', correct: true, rationale: 'Safety outranks scope logic; the decision tree starts there.' },

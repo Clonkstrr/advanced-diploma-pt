@@ -34,6 +34,7 @@ const questionSchema = z.object({
   options: z.array(optionSchema).min(2),
   cognitive,
   explanation: z.string().optional(),
+  safetyCritical: z.boolean().optional(),
 }).refine(
   (q) => uniqueIds(q.options),
   { message: 'Option ids within a question must be unique' },

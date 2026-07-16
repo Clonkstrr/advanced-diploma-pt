@@ -28,7 +28,8 @@ export interface Question {
   prompt: string;
   options: Option[];
   cognitive: CognitiveLevel;
-  explanation?: string;   // shown after answering
+  explanation?: string;      // shown after answering
+  safetyCritical?: boolean;  // must be answered correctly for unit mastery (never offset)
 }
 
 // Plan 2 component payload pieces.

@@ -38,13 +38,31 @@ describe('Catalog', () => {
     expect(unitListItem().textContent).not.toMatch(/✓/);
   });
 
-  it('shows a check mark when every component is completed', () => {
+  // Mastery answers: full marks on every gradeable component, safety items correct.
+  function masterUnit(store: Parameters<NonNullable<Parameters<typeof renderCatalog>[0]>>[0],
+    quizSafetyAnswer: string) {
     const { unit } = getUnit('apt501', 'apt501-u1')!;
-    renderCatalog((store) => {
-      for (const c of unit.components) {
-        store.getState().completeComponent('apt501', unit.id, c.id);
-      }
-    });
-    expect(unitListItem().textContent).toMatch(/✓/);
+    const record = (id: string, answers: Record<string, string[]>, score: number) =>
+      store.getState().recordAnswers('apt501', unit.id, id, answers, score);
+    record('apt501-u1-pretest', {}, 1);
+    record('apt501-u1-lab', {}, 1);
+    record('apt501-u1-case', {}, 1);
+    record('apt501-u1-errorid', {}, 1);
+    record('apt501-u1-quiz', { u1q1: [quizSafetyAnswer] }, 1);
+    record('apt501-u1-cumulative', { cu1: ['a'] }, 1);
+    for (const c of unit.components) {
+      store.getState().completeComponent('apt501', unit.id, c.id);
+    }
+  }
+
+  it('shows a check mark with mastery percent when mastered', () => {
+    renderCatalog((store) => masterUnit(store, 'b')); // 'b' = correct safety answer
+    expect(unitListItem().textContent).toMatch(/100% ✓/);
+  });
+
+  it('shows "needs review" when complete but a safety-critical item failed', () => {
+    renderCatalog((store) => masterUnit(store, 'a')); // wrong safety answer
+    expect(unitListItem().textContent).toMatch(/needs review/);
+    expect(unitListItem().textContent).not.toMatch(/✓/);
   });
 });
