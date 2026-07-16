@@ -11,6 +11,8 @@ import { NumericLab } from './components/NumericLab';
 import { ErrorId } from './components/ErrorId';
 import { BranchingCase } from './components/BranchingCase';
 import { EvidenceAppraisal } from './components/EvidenceAppraisal';
+import { RecallSet } from './components/RecallSet';
+import { TeachBack } from './components/TeachBack';
 
 function startIndex(components: UnitComponent[], lastComponentId?: string): number {
   if (!lastComponentId) return 0;
@@ -150,11 +152,21 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
             initialSubmitted={unitProgress?.components[current.id]?.completed}
             onComplete={onGraded} />
         );
-      // Plan 2 renderers land one per task; until then these fall through to
-      // the placeholder so the schema/type work can ship independently.
       case 'recallSet':
+        return (
+          <RecallSet key={current.id} title={current.title} cards={current.cards}
+            initialAnswers={unitProgress?.components[current.id]?.answers}
+            initialSubmitted={unitProgress?.components[current.id]?.completed}
+            onComplete={onGraded} />
+        );
       case 'teachBack':
-        return <p className="unsupported">This part of the lesson isn’t available yet.</p>;
+        return (
+          <TeachBack key={current.id} title={current.title} prompt={current.prompt}
+            modelAnswer={current.modelAnswer} rubric={current.rubric}
+            initialAnswers={unitProgress?.components[current.id]?.answers}
+            initialSubmitted={unitProgress?.components[current.id]?.completed}
+            onComplete={onGraded} />
+        );
       default: {
         const unhandled: never = current;
         void unhandled;
