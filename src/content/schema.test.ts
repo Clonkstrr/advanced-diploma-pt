@@ -26,4 +26,29 @@ describe('validateCourse', () => {
     (bad.units[0].components[2] as any).questions[0].options.forEach((o: any) => (o.correct = false));
     expect(() => validateCourse(bad)).toThrow(/at least one correct/i);
   });
+
+  it('rejects duplicate component ids within a unit', () => {
+    const bad = structuredClone(validCourse);
+    (bad.units[0].components[1] as any).id = 'o1'; // clashes with the outcomes block
+    expect(() => validateCourse(bad)).toThrow(/component ids .*unique/i);
+  });
+
+  it('rejects duplicate question ids within a question set', () => {
+    const bad = structuredClone(validCourse);
+    const qs = bad.units[0].components[2] as any;
+    qs.questions.push({ ...structuredClone(qs.questions[0]), id: 'qq1' });
+    expect(() => validateCourse(bad)).toThrow(/question ids .*unique/i);
+  });
+
+  it('rejects duplicate option ids within a question', () => {
+    const bad = structuredClone(validCourse);
+    (bad.units[0].components[2] as any).questions[0].options[1].id = 'a';
+    expect(() => validateCourse(bad)).toThrow(/option ids .*unique/i);
+  });
+
+  it('rejects duplicate unit ids within a course', () => {
+    const bad = structuredClone(validCourse);
+    bad.units.push(structuredClone(bad.units[0]));
+    expect(() => validateCourse(bad)).toThrow(/unit ids .*unique/i);
+  });
 });

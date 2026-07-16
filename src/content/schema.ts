@@ -25,6 +25,8 @@ const optionSchema = z.object({
   id: z.string().min(1), text: z.string().min(1), correct: z.boolean(), rationale: z.string().optional(),
 });
 
+const uniqueIds = (items: { id: string }[]) => new Set(items.map((i) => i.id)).size === items.length;
+
 const questionSchema = z.object({
   id: z.string().min(1),
   kind: z.enum(['single', 'multi']),
@@ -33,6 +35,9 @@ const questionSchema = z.object({
   cognitive,
   explanation: z.string().optional(),
 }).refine(
+  (q) => uniqueIds(q.options),
+  { message: 'Option ids within a question must be unique' },
+).refine(
   (q) => q.options.some((o) => o.correct),
   { message: 'Question must have at least one correct option' },
 ).refine(
@@ -47,20 +52,34 @@ const componentSchema = z.discriminatedUnion('type', [
     heading: z.string().min(1), body: z.string().min(1) }),
   z.object({ type: z.literal('questionSet'), id: z.string().min(1),
     role: z.enum(['pretest', 'quiz']), title: z.string().min(1),
-    questions: z.array(questionSchema).min(1) }),
+    // refine the array (not the object) so the union member stays a plain ZodObject
+    questions: z.array(questionSchema).min(1).refine(uniqueIds,
+      { message: 'Question ids within a question set must be unique' }) }),
 ]);
 
 const unitSchema = z.object({
   id: z.string().min(1), code: z.string().min(1), title: z.string().min(1),
   summary: z.string().min(1), qc: qcSchema, components: z.array(componentSchema).min(1),
-});
+}).refine(
+  (u) => uniqueIds(u.components),
+  { message: 'Component ids within a unit must be unique' },
+);
 
 const courseSchema = z.object({
   id: z.string().min(1), code: z.string().min(1), title: z.string().min(1),
   semester: z.number().int(), description: z.string().min(1),
   units: z.array(unitSchema).min(1),
-});
+}).refine(
+  (c) => uniqueIds(c.units),
+  { message: 'Unit ids within a course must be unique' },
+);
+
+// Compile-time proof that the zod schema and the hand-written Course type agree,
+// so parse() needs no cast. Editing either side past the other breaks the build.
+type Equals<A, B> = [A] extends [B] ? ([B] extends [A] ? true : false) : false;
+type Expect<T extends true> = T;
+export type AssertSchemaMatchesCourse = Expect<Equals<z.infer<typeof courseSchema>, Course>>;
 
 export function validateCourse(data: unknown): Course {
-  return courseSchema.parse(data) as Course;
+  return courseSchema.parse(data);
 }
