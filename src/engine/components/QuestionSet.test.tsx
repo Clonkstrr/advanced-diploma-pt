@@ -27,6 +27,33 @@ describe('QuestionSet', () => {
     expect(onComplete).toHaveBeenCalledWith({ answers: { q1: ['b'] }, score: 0 });
   });
 
+  it('shows the score after submit', () => {
+    const two: Question[] = [
+      ...questions,
+      { id: 'q2', kind: 'single', prompt: 'Pick C', cognitive: 'recall',
+        options: [{ id: 'c', text: 'C', correct: true },
+                  { id: 'd', text: 'D', correct: false }] },
+    ];
+    render(<QuestionSet title="Quiz" questions={two} onComplete={vi.fn()} />);
+    fireEvent.click(screen.getByLabelText('A'));
+    fireEvent.click(screen.getByLabelText('D'));
+    fireEvent.click(screen.getByRole('button', { name: /submit/i }));
+    expect(screen.getByText(/Score: 1 \/ 2 correct \(50%\)/)).toBeInTheDocument();
+  });
+
+  it('shows the score on a restored graded set', () => {
+    render(
+      <QuestionSet
+        title="Quiz"
+        questions={questions}
+        onComplete={vi.fn()}
+        initialAnswers={{ q1: ['a'] }}
+        initialSubmitted={true}
+      />,
+    );
+    expect(screen.getByText(/Score: 1 \/ 1 correct \(100%\)/)).toBeInTheDocument();
+  });
+
   it('restores saved answers and graded state on revisit', () => {
     const onComplete = vi.fn();
     render(

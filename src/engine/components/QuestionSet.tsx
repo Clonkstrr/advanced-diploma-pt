@@ -36,9 +36,17 @@ export function QuestionSet(
     onComplete({ answers, score: gradeQuestionSet(questions, answers) });
   };
 
+  const correctCount = questions.filter((q) => gradeQuestion(q, answers[q.id] ?? [])).length;
+
   return (
     <section className="question-set">
       <h2>{title}</h2>
+      {submitted && (
+        <p className="score">
+          Score: {correctCount} / {questions.length} correct (
+          {Math.round((correctCount / questions.length) * 100)}%)
+        </p>
+      )}
       {questions.map((q) => {
         const chosen = answers[q.id] ?? [];
         const correct = submitted && gradeQuestion(q, chosen);
