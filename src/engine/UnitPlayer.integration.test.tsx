@@ -10,7 +10,7 @@ import { getUnit } from '../content/registry';
 // a learner would, and expects the store to end at 100% completion.
 describe('APT 501.1 end-to-end through the player', () => {
   it('completes every component of the full spine', () => {
-    const store = createProgressStore(new StorageAdapter('int-' + Math.random()), () => 'now');
+    const store = createProgressStore(new StorageAdapter('int-' + Math.random()), () => '2026-07-16T12:00:00.000Z');
     const { course, unit } = getUnit('apt501', 'apt501-u1')!;
     render(<StoreProvider store={store}><UnitPlayer course={course!} unit={unit} /></StoreProvider>);
 

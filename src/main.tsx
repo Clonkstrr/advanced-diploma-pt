@@ -4,7 +4,7 @@ import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { StorageAdapter } from './storage/StorageAdapter';
 import { createProgressStore } from './state/progressStore';
 import { StoreProvider } from './state/StoreProvider';
-import { Layout, Home, Catalog, UnitRoute } from './App';
+import { Layout, Home, Catalog, Review, UnitRoute } from './App';
 import './styles.css';
 
 const store = createProgressStore(new StorageAdapter());
@@ -15,6 +15,7 @@ const router = createHashRouter([
     children: [
       { path: '/', element: <Home /> },
       { path: '/catalog', element: <Catalog /> },
+      { path: '/review', element: <Review /> },
       { path: '/course/:courseId/unit/:unitId', element: <UnitRoute /> },
     ],
   },

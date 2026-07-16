@@ -7,6 +7,7 @@ import { scheduleFromRatings, gradeReview } from './recall';
 
 export interface ProgressActions {
   state: ProgressState;
+  now: () => string; // the store's injected clock, exposed for due-date queries
   hydrate: () => Promise<void>;
   recordAnswers: (courseId: string, unitId: string, componentId: string,
     answers: Record<string, string[]>, score: number) => void;
@@ -43,6 +44,7 @@ export function createProgressStore(
 
     return {
       state: emptyProgress(now()),
+      now,
       hydrate: async () => {
         try {
           const loaded = await adapter.loadProgress();

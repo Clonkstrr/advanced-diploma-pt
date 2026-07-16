@@ -8,7 +8,7 @@ import { UnitPlayer } from './UnitPlayer';
 import { getUnit } from '../content/registry';
 
 function renderUnit() {
-  const store = createProgressStore(new StorageAdapter('up-' + Math.random()), () => 'now');
+  const store = createProgressStore(new StorageAdapter('up-' + Math.random()), () => '2026-07-16T12:00:00.000Z');
   const { course, unit } = getUnit('apt501', 'apt501-u1')!;
   render(<StoreProvider store={store}><UnitPlayer course={course!} unit={unit} /></StoreProvider>);
   return store;
@@ -38,7 +38,7 @@ function makeUnit(components: Unit['components']): { course: Course; unit: Unit 
 
 function renderSynthetic(components: Unit['components']) {
   const { course, unit } = makeUnit(components);
-  const store = createProgressStore(new StorageAdapter('up-' + Math.random()), () => 'now');
+  const store = createProgressStore(new StorageAdapter('up-' + Math.random()), () => '2026-07-16T12:00:00.000Z');
   render(<StoreProvider store={store}><UnitPlayer course={course} unit={unit} /></StoreProvider>);
   return store;
 }
@@ -63,7 +63,7 @@ describe('UnitPlayer', () => {
   });
 
   it('resumes on the exact component from lastLocation, not just lastComponentId', () => {
-    const store = createProgressStore(new StorageAdapter('up-' + Math.random()), () => 'now');
+    const store = createProgressStore(new StorageAdapter('up-' + Math.random()), () => '2026-07-16T12:00:00.000Z');
     const { course, unit } = getUnit('apt501', 'apt501-u1')!;
     const conceptComponent = unit.components.find((c) => c.type === 'concept')!;
     store.getState().setLocation('apt501', 'apt501-u1', conceptComponent.id);
@@ -73,7 +73,7 @@ describe('UnitPlayer', () => {
   });
 
   it('resumes from the unit\'s own lastComponentId when lastLocation is for another unit', () => {
-    const store = createProgressStore(new StorageAdapter('up-' + Math.random()), () => 'now');
+    const store = createProgressStore(new StorageAdapter('up-' + Math.random()), () => '2026-07-16T12:00:00.000Z');
     const { course, unit } = getUnit('apt501', 'apt501-u1')!;
     const concept = unit.components.find((c) => c.type === 'concept')!;
     store.getState().completeComponent('apt501', 'apt501-u1', concept.id);
@@ -102,6 +102,24 @@ describe('UnitPlayer', () => {
     expect(screen.getByText('Second set')).toBeInTheDocument();
     expect(screen.queryByText(/score:/i)).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: /submit answers/i })).toBeInTheDocument();
+  });
+
+  it('schedules recall items when a recall set completes', () => {
+    const store = renderSynthetic([
+      { type: 'recallSet', id: 'rs1', title: 'Recall',
+        cards: [
+          { id: 'k1', front: 'Front one', back: 'Back one' },
+          { id: 'k2', front: 'Front two', back: 'Back two' },
+        ] },
+    ]);
+    fireEvent.click(screen.getByRole('button', { name: /show answer/i }));
+    fireEvent.click(screen.getByRole('button', { name: /knew it/i }));
+    fireEvent.click(screen.getByRole('button', { name: /show answer/i }));
+    fireEvent.click(screen.getByRole('button', { name: /again/i }));
+
+    const recall = store.getState().state.recall!;
+    expect(recall['testc/test-u1/k1'].lapses).toBe(0);
+    expect(recall['testc/test-u1/k2'].lapses).toBe(1);
   });
 
   it('marks a final non-interactive component complete on view', () => {

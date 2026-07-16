@@ -41,6 +41,7 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
   const setLocation = useProgress((s) => s.setLocation);
   const recordAnswers = useProgress((s) => s.recordAnswers);
   const completeComponent = useProgress((s) => s.completeComponent);
+  const scheduleRecall = useProgress((s) => s.scheduleRecall);
   const savedLast = useProgress(
     (s) => s.state.courses[course.id]?.units[unit.id]?.lastComponentId,
   );
@@ -157,7 +158,16 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
           <RecallSet key={current.id} title={current.title} cards={current.cards}
             initialAnswers={unitProgress?.components[current.id]?.answers}
             initialSubmitted={unitProgress?.components[current.id]?.completed}
-            onComplete={onGraded} />
+            onComplete={(result) => {
+              onGraded(result);
+              // seed the spaced-recall queue from the self-ratings
+              const ratings = Object.fromEntries(
+                Object.entries(result.answers)
+                  .filter(([, v]) => v[0] === 'good' || v[0] === 'again')
+                  .map(([cardId, v]) => [cardId, v[0] as 'good' | 'again']),
+              );
+              scheduleRecall(course.id, unit.id, ratings);
+            }} />
         );
       case 'teachBack':
         return (

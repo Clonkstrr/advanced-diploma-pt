@@ -32,7 +32,7 @@ vi.mock('./content/registry', () => {
 
 describe('UnitRoute', () => {
   it('starts a freshly navigated unit at its own resume point, not the previous unit\'s index', async () => {
-    const store = createProgressStore(new StorageAdapter('app-' + Math.random()), () => 'now');
+    const store = createProgressStore(new StorageAdapter('app-' + Math.random()), () => '2026-07-16T12:00:00.000Z');
     const router = createMemoryRouter(
       [{ path: '/course/:courseId/unit/:unitId', element: <UnitRoute /> }],
       { initialEntries: ['/course/tc/unit/u1'] },
