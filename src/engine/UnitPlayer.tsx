@@ -9,6 +9,8 @@ import { WorkedExample } from './components/WorkedExample';
 import { Classification } from './components/Classification';
 import { NumericLab } from './components/NumericLab';
 import { ErrorId } from './components/ErrorId';
+import { BranchingCase } from './components/BranchingCase';
+import { EvidenceAppraisal } from './components/EvidenceAppraisal';
 
 function startIndex(components: UnitComponent[], lastComponentId?: string): number {
   if (!lastComponentId) return 0;
@@ -131,10 +133,25 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
             initialSubmitted={unitProgress?.components[current.id]?.completed}
             onComplete={onGraded} />
         );
+      case 'branchingCase':
+        return (
+          <BranchingCase key={current.id} title={current.title} brief={current.brief}
+            startNodeId={current.startNodeId} nodes={current.nodes}
+            initialAnswers={unitProgress?.components[current.id]?.answers}
+            initialSubmitted={unitProgress?.components[current.id]?.completed}
+            onComplete={onGraded} />
+        );
+      case 'evidenceAppraisal':
+        return (
+          <EvidenceAppraisal key={current.id} title={current.title} brief={current.brief}
+            hierarchy={current.hierarchy} claims={current.claims}
+            briefPrompt={current.briefPrompt} modelBrief={current.modelBrief}
+            initialAnswers={unitProgress?.components[current.id]?.answers}
+            initialSubmitted={unitProgress?.components[current.id]?.completed}
+            onComplete={onGraded} />
+        );
       // Plan 2 renderers land one per task; until then these fall through to
       // the placeholder so the schema/type work can ship independently.
-      case 'branchingCase':
-      case 'evidenceAppraisal':
       case 'recallSet':
       case 'teachBack':
         return <p className="unsupported">This part of the lesson isn’t available yet.</p>;
