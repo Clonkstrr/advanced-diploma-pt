@@ -6,6 +6,9 @@ name: build-mac
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/build-mac.yml'
 
 jobs:
   mac:
