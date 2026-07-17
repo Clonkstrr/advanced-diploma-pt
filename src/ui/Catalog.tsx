@@ -26,6 +26,8 @@ export function Catalog() {
                 <li key={u.id}>
                   <Link to={`/course/${c.id}/unit/${u.id}`}>{u.code} — {u.title}</Link>
                   {m.percent !== null ? ` · ${m.percent}%` : ''}{status}
+                  {' '}
+                  <Link className="ref-link" to={`/reference/${c.id}/${u.id}`}>sources</Link>
                 </li>
               );
             })}

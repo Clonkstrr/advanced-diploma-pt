@@ -67,3 +67,15 @@ textarea { width:100%; min-height:120px; }
 .hierarchy { color:var(--muted); font-size:.92rem; }
 .review-due { display:inline-block; border:1px solid var(--accent); color:var(--accent);
   padding:6px 12px; border-radius:8px; text-decoration:none; }
+.next-up { color:var(--accent); }
+.program-progress { font-weight:600; }
+.scope-warning { border-left:3px solid #b3261e; padding:8px 12px; border-radius:0 8px 8px 0;
+  background:color-mix(in srgb, #b3261e 7%, transparent); }
+.sources { padding-left:0; } .sources li { border:1px solid var(--line); border-radius:10px;
+  padding:10px 14px; margin:10px 0; list-style:none; }
+.sources .pending { color:#b58a2c; } .sources .verified { color:#2e7d54; }
+.qc-meta p { margin:4px 0; color:var(--muted); }
+.ref-link { font-size:.85rem; color:var(--muted); }
+.settings fieldset { border:1px solid var(--line); border-radius:10px; margin:14px 0; padding:12px 16px; }
+.transfer-message { color:var(--accent); }
+.app-header nav a { margin-left:14px; }

@@ -1,4 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
+import { Link } from 'react-router-dom';
 import type { Course, Unit, UnitComponent } from '../types/content';
 import { useProgress } from '../state/StoreProvider';
 import { ConceptBlock } from './components/ConceptBlock';
@@ -188,7 +189,11 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
   return (
     <article className="unit-player">
       <header>
-        <p className="crumb">{course.code} · {unit.code}</p>
+        <p className="crumb">
+          {course.code} · {unit.code}
+          {' '}
+          <Link className="ref-link" to={`/reference/${course.id}/${unit.id}`}>Sources & QC</Link>
+        </p>
         <h1>{unit.title}</h1>
         <ol className="rail">
           {unit.components.map((c, i) => (

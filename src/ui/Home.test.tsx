@@ -19,10 +19,10 @@ function renderHome(withLocation: boolean) {
 describe('Home', () => {
   it('shows a Continue link when there is a saved location', () => {
     renderHome(true);
-    expect(screen.getByRole('link', { name: /continue/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /continue where you left off/i })).toBeInTheDocument();
   });
   it('shows a Start link when there is no saved location', () => {
     renderHome(false);
-    expect(screen.getByRole('link', { name: /start|browse|catalog/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /start the program/i })).toBeInTheDocument();
   });
 });
