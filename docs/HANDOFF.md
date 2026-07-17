@@ -1,5 +1,18 @@
 # Handoff — resume here (written 2026-07-16, model-agnostic: usable by any AI assistant or human)
 
+> **UPDATE 2026-07-16 (late night): Plan 3 MERGED (e133bba). Plan 4 implemented on
+> `feat/dashboard-reference-settings`** (plan doc:
+> `docs/plans/2026-07-16-dashboard-reference-settings.md`): dashboard home
+> (program progress, next-action precedence: due reviews > continue > first
+> unmastered > catalog), /reference/:courseId/:unitId QC surface (sources with
+> verified/pending badges, scope warning, review dates), /settings (theme +
+> text scale persisted under their own kv key; versioned progress
+> export/import with validate-before-arm two-step confirm). Suite 133 green.
+> e2e drive text expectations verified compatible by inspection. Live smoke of
+> Plans 3+4 UI deliberately deferred to Plan 5 packaging (needs Josh's
+> permission to open windows). Then: Plan 5 (macOS packaging — needs a Mac or
+> CI) and the content plans (the deep-dive requirement).
+>
 > **UPDATE 2026-07-16 (night): Plan 2 MERGED to master (4821b74, live-verified 19/19).**
 > **Plan 3 implemented on `feat/spaced-repetition`** (plan doc:
 > `docs/plans/2026-07-16-spaced-repetition-assessment.md`): recall scheduler
