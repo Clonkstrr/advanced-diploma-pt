@@ -79,3 +79,4 @@ textarea { width:100%; min-height:120px; }
 .settings fieldset { border:1px solid var(--line); border-radius:10px; margin:14px 0; padding:12px 16px; }
 .transfer-message { color:var(--accent); }
 .app-header nav a { margin-left:14px; }
+a { color:var(--accent); }

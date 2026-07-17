@@ -1,5 +1,18 @@
 # Plan verification log
 
+## Plans 3+4 verification (2026-07-16, live, with Josh's permission)
+
+- `npm test`: PASS (135 tests, 34 files) · typechecks clean
+- UI smoke (`scripts/smoke-ui4.mjs`): **12/12** — dashboard (program progress, Start CTA,
+  next action), reference page (sources listed, honest "pending verification" badges,
+  scope warning), review empty state, dark theme + large text applied AND persisted
+  across a full relaunch. Screenshots inspected (`e2e-shots/ui4-*.png`).
+- Full acceptance regression (`scripts/e2e-drive.mjs`): **19/19** — the 16-component
+  flow with relaunch-resume is intact under the new dashboard/mastery UI.
+- Found live and fixed with a regression test: the Settings initial async load could
+  clobber a theme change made before it resolved (dirty-flag + latest-ref fix;
+  the live smoke re-ran 12/12 after).
+
 ## Plan 2 verification (2026-07-16)
 
 - `npm test`: PASS (90 tests, 25 files) · `npm run build`: PASS · electron tsc: PASS

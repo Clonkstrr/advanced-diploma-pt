@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { StorageAdapter } from '../storage/StorageAdapter';
 import type { Settings as SettingsValue } from '../state/settings';
 import { defaultSettings, loadSettings, saveSettings, applySettings } from '../state/settings';
@@ -36,14 +36,25 @@ export function Settings(
   const [settings, setSettings] = useState<SettingsValue>(defaultSettings);
   const [pendingImport, setPendingImport] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
+  // latest guards against stale render closures on rapid changes; dirty stops
+  // the async initial load from clobbering an edit the user already made.
+  const latest = useRef(settings);
+  const dirty = useRef(false);
 
   useEffect(() => {
     let cancelled = false;
-    void loadSettings(adapter).then((loaded) => { if (!cancelled) setSettings(loaded); });
+    void loadSettings(adapter).then((loaded) => {
+      if (cancelled || dirty.current) return;
+      latest.current = loaded;
+      setSettings(loaded);
+    });
     return () => { cancelled = true; };
   }, [adapter]);
 
-  const update = (next: SettingsValue) => {
+  const update = (patch: Partial<SettingsValue>) => {
+    dirty.current = true;
+    const next = { ...latest.current, ...patch };
+    latest.current = next;
     setSettings(next);
     applySettings(next, document.documentElement);
     void saveSettings(adapter, next).catch((err) => {
@@ -90,7 +101,7 @@ export function Settings(
         {THEME_OPTIONS.map((o) => (
           <label key={o.value}>
             <input type="radio" name="theme" checked={settings.theme === o.value}
-              onChange={() => update({ ...settings, theme: o.value })} />
+              onChange={() => update({ theme: o.value })} />
             {o.label}
           </label>
         ))}
@@ -101,7 +112,7 @@ export function Settings(
         {SCALE_OPTIONS.map((o) => (
           <label key={o.value}>
             <input type="radio" name="textScale" checked={settings.textScale === o.value}
-              onChange={() => update({ ...settings, textScale: o.value })} />
+              onChange={() => update({ textScale: o.value })} />
             {o.label}
           </label>
         ))}
