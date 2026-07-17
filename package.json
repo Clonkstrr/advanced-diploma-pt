@@ -1,6 +1,8 @@
 {
   "name": "advanced-diploma-pt",
   "version": "0.1.0",
+  "description": "Offline learning app: Advanced Diploma in Personal Training Science and Coaching",
+  "author": "Josh",
   "private": true,
   "type": "module",
   "main": "dist-electron/main.js",

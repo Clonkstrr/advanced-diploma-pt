@@ -6,9 +6,12 @@ files:
   - dist/**/*
   - dist-electron/**/*
 mac:
+  # universal = one binary for both Intel and Apple Silicon MacBooks
   target:
-    - dmg
-    - zip
+    - target: dmg
+      arch: [universal]
+    - target: zip
+      arch: [universal]
   category: public.app-category.education
 win:
   target:
