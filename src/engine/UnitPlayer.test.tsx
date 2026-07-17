@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import type { Course, Question, Unit } from '../types/content';
 import { StorageAdapter } from '../storage/StorageAdapter';
 import { createProgressStore } from '../state/progressStore';
@@ -10,7 +11,7 @@ import { getUnit } from '../content/registry';
 function renderUnit() {
   const store = createProgressStore(new StorageAdapter('up-' + Math.random()), () => '2026-07-16T12:00:00.000Z');
   const { course, unit } = getUnit('apt501', 'apt501-u1')!;
-  render(<StoreProvider store={store}><UnitPlayer course={course!} unit={unit} /></StoreProvider>);
+  render(<StoreProvider store={store}><MemoryRouter><UnitPlayer course={course!} unit={unit} /></MemoryRouter></StoreProvider>);
   return store;
 }
 
@@ -39,7 +40,7 @@ function makeUnit(components: Unit['components']): { course: Course; unit: Unit 
 function renderSynthetic(components: Unit['components']) {
   const { course, unit } = makeUnit(components);
   const store = createProgressStore(new StorageAdapter('up-' + Math.random()), () => '2026-07-16T12:00:00.000Z');
-  render(<StoreProvider store={store}><UnitPlayer course={course} unit={unit} /></StoreProvider>);
+  render(<StoreProvider store={store}><MemoryRouter><UnitPlayer course={course} unit={unit} /></MemoryRouter></StoreProvider>);
   return store;
 }
 
@@ -67,7 +68,7 @@ describe('UnitPlayer', () => {
     const { course, unit } = getUnit('apt501', 'apt501-u1')!;
     const conceptComponent = unit.components.find((c) => c.type === 'concept')!;
     store.getState().setLocation('apt501', 'apt501-u1', conceptComponent.id);
-    render(<StoreProvider store={store}><UnitPlayer course={course!} unit={unit} /></StoreProvider>);
+    render(<StoreProvider store={store}><MemoryRouter><UnitPlayer course={course!} unit={unit} /></MemoryRouter></StoreProvider>);
     expect(screen.getByText((conceptComponent as { heading: string }).heading)).toBeInTheDocument();
     expect(screen.queryByText('Before we begin')).not.toBeInTheDocument();
   });
@@ -78,7 +79,7 @@ describe('UnitPlayer', () => {
     const concept = unit.components.find((c) => c.type === 'concept')!;
     store.getState().completeComponent('apt501', 'apt501-u1', concept.id);
     store.getState().setLocation('apt501', 'some-other-unit', 'elsewhere');
-    render(<StoreProvider store={store}><UnitPlayer course={course!} unit={unit} /></StoreProvider>);
+    render(<StoreProvider store={store}><MemoryRouter><UnitPlayer course={course!} unit={unit} /></MemoryRouter></StoreProvider>);
     expect(screen.getByText((concept as { heading: string }).heading)).toBeInTheDocument();
   });
 

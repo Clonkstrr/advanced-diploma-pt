@@ -8,7 +8,8 @@ An offline, interactive, university-level course application. The learner works 
 
 **Plan 1 (Platform Foundation): complete, verified, review-hardened, merged to `master`.**
 **Plan 2 (Component Library & Diagrams): complete, verified live (19/19), merged to `master`** — all nine new engine component types plus the in-code SVG diagram registry, and APT 501.1 authored to the full 12-component lesson spine (16 components).
-**Plan 3 (Spaced Repetition & Assessment): implemented on `feat/spaced-repetition`** — spaced-recall scheduler (3/7/14/90-day ladder with relearning on lapses), `/review` surface with Home due-count, and mastery gates (80% over gradeable components, non-offsettable safety-critical items, remediation flags in the catalog). Pending: review, merge.
+**Plan 3 (Spaced Repetition & Assessment): complete, merged to `master`** — spaced-recall scheduler (3/7/14/90-day ladder with relearning on lapses), `/review` surface with due-count, and mastery gates (80% over gradeable components, non-offsettable safety-critical items, remediation flags).
+**Plan 4 (Dashboard, Reference, Settings): implemented on `feat/dashboard-reference-settings`** — dashboard home with program progress and a precedence-ordered next action, per-unit Sources & QC reference pages (honest verified/pending badges, scope warnings), theme + text-size settings, and versioned progress export/import. Pending: merge; live smoke folds into Plan 5 packaging.
 
 - ✅ Vite + React 19 + TypeScript toolchain, Vitest tests
 - ✅ Content schema (Zod, single source of truth, unique-id enforcement) + data-driven lesson model + APT 501 seed Unit 1 (fully authored, completable)

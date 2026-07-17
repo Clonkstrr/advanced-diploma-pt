@@ -3,11 +3,13 @@ import ReactDOM from 'react-dom/client';
 import { createHashRouter, RouterProvider } from 'react-router-dom';
 import { StorageAdapter } from './storage/StorageAdapter';
 import { createProgressStore } from './state/progressStore';
+import { loadSettings, applySettings } from './state/settings';
 import { StoreProvider } from './state/StoreProvider';
-import { Layout, Home, Catalog, Review, UnitRoute } from './App';
+import { Layout, Home, Catalog, Review, Reference, Settings, UnitRoute } from './App';
 import './styles.css';
 
-const store = createProgressStore(new StorageAdapter());
+const adapter = new StorageAdapter();
+const store = createProgressStore(adapter);
 
 const router = createHashRouter([
   {
@@ -16,6 +18,8 @@ const router = createHashRouter([
       { path: '/', element: <Home /> },
       { path: '/catalog', element: <Catalog /> },
       { path: '/review', element: <Review /> },
+      { path: '/reference/:courseId/:unitId', element: <Reference /> },
+      { path: '/settings', element: <Settings adapter={adapter} /> },
       { path: '/course/:courseId/unit/:unitId', element: <UnitRoute /> },
     ],
   },
@@ -28,6 +32,11 @@ async function boot() {
     await store.getState().hydrate();
   } catch (err) {
     console.error('Boot hydration failed; starting with in-memory state.', err);
+  }
+  try {
+    applySettings(await loadSettings(adapter), document.documentElement);
+  } catch (err) {
+    console.error('Settings failed to load; using defaults.', err);
   }
   // Flush pending saves when the window is hidden or closed (belt-and-braces).
   // Note: the beforeunload flush is best-effort only — the async IndexedDB write it

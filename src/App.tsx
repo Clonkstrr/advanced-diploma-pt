@@ -3,6 +3,8 @@ import { Layout } from './ui/Layout';
 import { Home } from './ui/Home';
 import { Catalog } from './ui/Catalog';
 import { Review } from './ui/Review';
+import { Reference } from './ui/Reference';
+import { Settings } from './ui/Settings';
 import { UnitPlayer } from './engine/UnitPlayer';
 import { getUnit } from './content/registry';
 
@@ -14,4 +16,4 @@ function UnitRoute() {
   return <UnitPlayer key={`${courseId}/${unitId}`} course={found.course} unit={found.unit} />;
 }
 
-export { Layout, Home, Catalog, Review, UnitRoute };
+export { Layout, Home, Catalog, Review, Reference, Settings, UnitRoute };

@@ -4,6 +4,7 @@ import { emptyProgress, isProgressState } from '../types/progress';
 import type { StorageAdapter } from '../storage/StorageAdapter';
 import { createDebouncedSaver } from './autosave';
 import { scheduleFromRatings, gradeReview } from './recall';
+import { serializeProgress, parseProgressExport } from './transfer';
 
 export interface ProgressActions {
   state: ProgressState;
@@ -15,6 +16,8 @@ export interface ProgressActions {
   setLocation: (courseId: string, unitId: string, componentId: string) => void;
   scheduleRecall: (courseId: string, unitId: string, ratings: Record<string, RecallRating>) => void;
   reviewCard: (key: string, rating: RecallRating) => void;
+  exportProgress: () => string;
+  importProgress: (json: string) => void; // throws on invalid input
   flush: () => Promise<void>;
 }
 
@@ -90,6 +93,12 @@ export function createProgressStore(
         commit((d) => {
           d.recall = gradeReview(d.recall ?? {}, key, rating, now());
         }),
+      exportProgress: () => serializeProgress(get().state, now()),
+      importProgress: (json) => {
+        const imported = parseProgressExport(json); // throws before any state is touched
+        set({ state: imported });
+        saver(imported);
+      },
       flush: () => saver.flush(),
     };
   });

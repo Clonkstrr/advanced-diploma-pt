@@ -37,13 +37,17 @@ export class StorageAdapter {
     await db.put(STORE, state, KEY);
   }
 
-  async loadBackup(key: string): Promise<unknown | null> {
+  async loadValue(key: string): Promise<unknown | null> {
     const db = await this.dbPromise;
     return (await db.get(STORE, key)) ?? null;
   }
 
-  async saveBackup(key: string, value: unknown): Promise<void> {
+  async saveValue(key: string, value: unknown): Promise<void> {
     const db = await this.dbPromise;
     await db.put(STORE, value, key);
   }
+
+  // Backups are ordinary kv entries under their own keys.
+  loadBackup(key: string): Promise<unknown | null> { return this.loadValue(key); }
+  saveBackup(key: string, value: unknown): Promise<void> { return this.saveValue(key, value); }
 }

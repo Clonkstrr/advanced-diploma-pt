@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { StorageAdapter } from '../storage/StorageAdapter';
 import { createProgressStore } from '../state/progressStore';
 import { StoreProvider } from '../state/StoreProvider';
@@ -12,7 +13,7 @@ describe('APT 501.1 end-to-end through the player', () => {
   it('completes every component of the full spine', () => {
     const store = createProgressStore(new StorageAdapter('int-' + Math.random()), () => '2026-07-16T12:00:00.000Z');
     const { course, unit } = getUnit('apt501', 'apt501-u1')!;
-    render(<StoreProvider store={store}><UnitPlayer course={course!} unit={unit} /></StoreProvider>);
+    render(<StoreProvider store={store}><MemoryRouter><UnitPlayer course={course!} unit={unit} /></MemoryRouter></StoreProvider>);
 
     const next = () => fireEvent.click(screen.getByRole('button', { name: /^next$/i }));
     const pick = (label: string | RegExp) => fireEvent.click(screen.getByLabelText(label));

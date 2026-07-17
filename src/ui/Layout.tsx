@@ -5,7 +5,11 @@ export function Layout() {
     <div className="app">
       <header className="app-header">
         <Link to="/" className="brand">Advanced Diploma · Personal Training Science & Coaching</Link>
-        <nav><Link to="/catalog">Catalog</Link></nav>
+        <nav>
+          <Link to="/catalog">Catalog</Link>
+          {' '}
+          <Link to="/settings">Settings</Link>
+        </nav>
       </header>
       <main><Outlet /></main>
     </div>
