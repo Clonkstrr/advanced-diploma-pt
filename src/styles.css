@@ -2,6 +2,9 @@
 @media (prefers-color-scheme: dark) {
   :root { --bg:#16181c; --fg:#e8eaed; --muted:#9aa4b2; --accent:#8fb0e0; --card:#1f2329; --line:#2c313a; }
 }
+/* Settings override the system preference when data-theme is set */
+:root[data-theme='light'] { --bg:#faf9f7; --fg:#1f2328; --muted:#5b6470; --accent:#3a5a8c; --card:#fff; --line:#e6e2db; }
+:root[data-theme='dark'] { --bg:#16181c; --fg:#e8eaed; --muted:#9aa4b2; --accent:#8fb0e0; --card:#1f2329; --line:#2c313a; }
 * { box-sizing: border-box; }
 body { margin:0; background:var(--bg); color:var(--fg);
   font: 17px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
