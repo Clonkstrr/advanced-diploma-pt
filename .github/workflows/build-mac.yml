@@ -1,0 +1,31 @@
+# Builds the unsigned macOS .dmg/.zip on a GitHub-hosted Mac runner.
+# Trigger it from the GitHub UI (Actions -> build-mac -> Run workflow)
+# once this repo has been pushed to GitHub. Artifacts appear on the
+# run page; download the .dmg and copy it to the MacBook.
+name: build-mac
+
+on:
+  workflow_dispatch:
+
+jobs:
+  mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run electron:build
+        env:
+          # unsigned build: skip code signing entirely
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: advanced-diploma-pt-mac
+          path: |
+            release/*.dmg
+            release/*.zip
+          if-no-files-found: error
