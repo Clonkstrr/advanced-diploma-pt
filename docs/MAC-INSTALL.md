@@ -2,9 +2,9 @@
 
 ## Getting a build
 
-The `.dmg` must be built on macOS — it cannot be produced on the Windows dev machine. Two options:
+The repo lives at **https://github.com/Clonkstrr/advanced-diploma-pt** (private). The `.dmg` must be built on macOS — it cannot be produced on the Windows dev machine. Two options:
 
-1. **GitHub Actions (recommended, no Mac setup needed).** Push this repo to GitHub, then on the repo page: Actions → *build-mac* → Run workflow. When it finishes, download the `advanced-diploma-pt-mac` artifact from the run page — it contains the `.dmg`.
+1. **GitHub Actions (recommended, no Mac setup needed).** On the repo page: Actions → *build-mac* → Run workflow (it also runs automatically when the workflow file changes). When it finishes, download the `advanced-diploma-pt-mac` artifact from the run page — it contains a **universal** `.dmg` (works on Intel and Apple Silicon). Artifacts expire after 90 days; just re-run the workflow for a fresh one.
 2. **Directly on the MacBook.** Install Node 24+, clone/copy this repo, then:
    ```bash
    npm ci
