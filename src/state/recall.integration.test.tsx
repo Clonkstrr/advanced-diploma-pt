@@ -21,7 +21,7 @@ describe('spaced recall over time', () => {
     let clock = DAY0;
     const adapter = new StorageAdapter('loop-' + Math.random().toString(36).slice(2));
     const store = createProgressStore(adapter, () => clock);
-    const { unit } = getUnit('apt501', 'apt501-u1')!;
+    const { unit } = getUnit('apt501', 'apt501-u2')!;
     const cards = unit.components.find((c) => c.type === 'recallSet')!;
     const cardIds = (cards as { cards: { id: string }[] }).cards.map((c) => c.id);
 

@@ -8,9 +8,11 @@ import { StoreProvider } from '../state/StoreProvider';
 import { UnitPlayer } from './UnitPlayer';
 import { getUnit } from '../content/registry';
 
+const FIRST_UNIT_ID = 'apt501-u2'; // first unit of the course since the scope unit's removal
+
 function renderUnit() {
   const store = createProgressStore(new StorageAdapter('up-' + Math.random()), () => '2026-07-16T12:00:00.000Z');
-  const { course, unit } = getUnit('apt501', 'apt501-u1')!;
+  const { course, unit } = getUnit('apt501', FIRST_UNIT_ID)!;
   render(<StoreProvider store={store}><MemoryRouter><UnitPlayer course={course!} unit={unit} /></MemoryRouter></StoreProvider>);
   return store;
 }
@@ -25,10 +27,11 @@ function singleQuestion(id: string, prompt: string): Question {
   };
 }
 
-function makeUnit(components: Unit['components']): { course: Course; unit: Unit } {
+function makeUnit(components: Unit['components'], gateExempt = false): { course: Course; unit: Unit } {
   const unit: Unit = {
     id: 'test-u1', code: 'T 1.1', title: 'Test unit', summary: '',
     qc: { sources: [], confidence: 'high', lastReviewed: '2026-07-16', reviewBy: '2027-07-16' },
+    ...(gateExempt ? { gateExempt } : {}),
     components,
   };
   const course: Course = {
@@ -37,8 +40,8 @@ function makeUnit(components: Unit['components']): { course: Course; unit: Unit 
   return { course, unit };
 }
 
-function renderSynthetic(components: Unit['components']) {
-  const { course, unit } = makeUnit(components);
+function renderSynthetic(components: Unit['components'], gateExempt = false) {
+  const { course, unit } = makeUnit(components, gateExempt);
   const store = createProgressStore(new StorageAdapter('up-' + Math.random()), () => '2026-07-16T12:00:00.000Z');
   render(<StoreProvider store={store}><MemoryRouter><UnitPlayer course={course} unit={unit} /></MemoryRouter></StoreProvider>);
   return store;
@@ -52,11 +55,14 @@ describe('UnitPlayer', () => {
   });
 
   it('gateExempt units offer a one-click skip that completes every component', () => {
-    const store = renderUnit(); // apt501-u1 is gateExempt
+    const components: Unit['components'] = [
+      { type: 'concept', id: 'sk1', heading: 'H1', body: 'B1' },
+      { type: 'concept', id: 'sk2', heading: 'H2', body: 'B2' },
+    ];
+    const store = renderSynthetic(components, true);
     fireEvent.click(screen.getByRole('button', { name: /skip unit/i }));
-    const { unit } = getUnit('apt501', 'apt501-u1')!;
-    const up = store.getState().state.courses['apt501'].units['apt501-u1'];
-    for (const c of unit.components) {
+    const up = store.getState().state.courses['testc'].units['test-u1'];
+    for (const c of components) {
       expect(up.components[c.id]?.completed).toBe(true);
     }
   });
@@ -68,11 +74,11 @@ describe('UnitPlayer', () => {
 
   it('records location as the learner advances (for resume)', () => {
     const store = renderUnit();
-    const { unit } = getUnit('apt501', 'apt501-u1')!;
+    const { unit } = getUnit('apt501', FIRST_UNIT_ID)!;
     fireEvent.click(screen.getByRole('button', { name: /next/i }));
     // the location must actually advance to the second component…
     expect(store.getState().state.lastLocation).toEqual({
-      courseId: 'apt501', unitId: 'apt501-u1', componentId: unit.components[1].id,
+      courseId: 'apt501', unitId: FIRST_UNIT_ID, componentId: unit.components[1].id,
     });
     // …and the first component must no longer be on screen
     expect(screen.queryByText('Before we begin')).not.toBeInTheDocument();
@@ -80,9 +86,9 @@ describe('UnitPlayer', () => {
 
   it('resumes on the exact component from lastLocation, not just lastComponentId', () => {
     const store = createProgressStore(new StorageAdapter('up-' + Math.random()), () => '2026-07-16T12:00:00.000Z');
-    const { course, unit } = getUnit('apt501', 'apt501-u1')!;
+    const { course, unit } = getUnit('apt501', FIRST_UNIT_ID)!;
     const conceptComponent = unit.components.find((c) => c.type === 'concept')!;
-    store.getState().setLocation('apt501', 'apt501-u1', conceptComponent.id);
+    store.getState().setLocation('apt501', FIRST_UNIT_ID, conceptComponent.id);
     render(<StoreProvider store={store}><MemoryRouter><UnitPlayer course={course!} unit={unit} /></MemoryRouter></StoreProvider>);
     expect(screen.getByText((conceptComponent as { heading: string }).heading)).toBeInTheDocument();
     expect(screen.queryByText('Before we begin')).not.toBeInTheDocument();
@@ -90,9 +96,9 @@ describe('UnitPlayer', () => {
 
   it('resumes from the unit\'s own lastComponentId when lastLocation is for another unit', () => {
     const store = createProgressStore(new StorageAdapter('up-' + Math.random()), () => '2026-07-16T12:00:00.000Z');
-    const { course, unit } = getUnit('apt501', 'apt501-u1')!;
+    const { course, unit } = getUnit('apt501', FIRST_UNIT_ID)!;
     const concept = unit.components.find((c) => c.type === 'concept')!;
-    store.getState().completeComponent('apt501', 'apt501-u1', concept.id);
+    store.getState().completeComponent('apt501', FIRST_UNIT_ID, concept.id);
     store.getState().setLocation('apt501', 'some-other-unit', 'elsewhere');
     render(<StoreProvider store={store}><MemoryRouter><UnitPlayer course={course!} unit={unit} /></MemoryRouter></StoreProvider>);
     expect(screen.getByText((concept as { heading: string }).heading)).toBeInTheDocument();

@@ -3,23 +3,23 @@ import { render, screen } from '@testing-library/react';
 import { Visual } from './Visual';
 
 const props = {
-  title: 'When to train, modify, refer, or stop',
-  diagramId: 'scope-decision-tree',
-  caption: 'The standing decision path for every session.',
+  title: 'Where evidence types rank — and why rank is only the start',
+  diagramId: 'evidence-hierarchy',
+  caption: 'The hierarchy as a starting heuristic, not a verdict.',
   callouts: [
-    { id: 'c1', label: '1', text: 'Red flags always stop the session first.' },
-    { id: 'c2', label: '2', text: 'Scope and competence are separate questions.' },
+    { id: 'c1', label: '1', text: 'Higher designs control more sources of error.' },
+    { id: 'c2', label: '2', text: 'Execution can move a study up or down the pyramid.' },
   ],
 };
 
 describe('Visual', () => {
   it('renders the registered diagram with title, caption and callouts', () => {
     render(<Visual {...props} />);
-    expect(screen.getByText('When to train, modify, refer, or stop')).toBeInTheDocument();
-    expect(screen.getByRole('img', { name: /decision/i })).toBeInTheDocument();
-    expect(screen.getByText('The standing decision path for every session.')).toBeInTheDocument();
-    expect(screen.getByText('Red flags always stop the session first.')).toBeInTheDocument();
-    expect(screen.getByText('Scope and competence are separate questions.')).toBeInTheDocument();
+    expect(screen.getByText('Where evidence types rank — and why rank is only the start')).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: /hierarchy of evidence/i })).toBeInTheDocument();
+    expect(screen.getByText('The hierarchy as a starting heuristic, not a verdict.')).toBeInTheDocument();
+    expect(screen.getByText('Higher designs control more sources of error.')).toBeInTheDocument();
+    expect(screen.getByText('Execution can move a study up or down the pyramid.')).toBeInTheDocument();
   });
 
   it('shows a placeholder instead of crashing for an unknown diagram id', () => {

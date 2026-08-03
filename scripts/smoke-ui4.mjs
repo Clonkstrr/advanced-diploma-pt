@@ -65,7 +65,7 @@ async function main() {
   await clickText(page, 'sources');
   await waitText(page, /Sources & quality control/);
   const ref = await bodyText(page);
-  check('reference lists the sources', ref.includes('CSEP') && ref.includes('NSCA'));
+  check('reference lists the sources', ref.includes('Greenhalgh') && ref.includes('CONSORT'));
   check('reference is honest about verification', ref.includes('pending verification'));
   check('reference has no scope banner', !ref.includes('does not diagnose'));
   await page.screenshot({ path: path.join(SHOTS, 'ui4-reference.png') });

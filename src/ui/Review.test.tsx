@@ -30,21 +30,21 @@ describe('Review surface', () => {
     store.setState({
       state: {
         ...store.getState().state,
-        recall: { 'apt501/apt501-u1/r1': { step: 0, due: '2026-07-19T12:00:00.000Z', lapses: 0 } },
+        recall: { 'apt501/apt501-u2/apt501-u2-r1': { step: 0, due: '2026-07-19T12:00:00.000Z', lapses: 0 } },
       },
     });
     renderWithStore(store, <Review />);
 
     // real card front resolved from the content registry
-    expect(screen.getByText(/what three things define your scope/i)).toBeInTheDocument();
-    expect(screen.queryByText(/your training\/certification/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/four letters of PICO/i)).toBeInTheDocument();
+    expect(screen.queryByText(/population, intervention, comparator/i)).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: /show answer/i }));
-    expect(screen.getByText(/your training\/certification/i)).toBeInTheDocument();
+    expect(screen.getByText(/population, intervention, comparator/i)).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole('button', { name: /knew it/i }));
     // rescheduled to rung 1 (+7d) -> no longer due
-    expect(store.getState().state.recall!['apt501/apt501-u1/r1'].step).toBe(1);
+    expect(store.getState().state.recall!['apt501/apt501-u2/apt501-u2-r1'].step).toBe(1);
     expect(screen.getByText(/all done/i)).toBeInTheDocument();
   });
 
@@ -68,9 +68,9 @@ describe('Home review-due count', () => {
       state: {
         ...store.getState().state,
         recall: {
-          'apt501/apt501-u1/r1': { step: 0, due: '2026-07-19T12:00:00.000Z', lapses: 0 },
-          'apt501/apt501-u1/r2': { step: 0, due: '2026-07-18T12:00:00.000Z', lapses: 0 },
-          'apt501/apt501-u1/r3': { step: 1, due: '2026-08-30T12:00:00.000Z', lapses: 0 },
+          'apt501/apt501-u2/apt501-u2-r1': { step: 0, due: '2026-07-19T12:00:00.000Z', lapses: 0 },
+          'apt501/apt501-u2/apt501-u2-r2': { step: 0, due: '2026-07-18T12:00:00.000Z', lapses: 0 },
+          'apt501/apt501-u2/apt501-u2-r3': { step: 1, due: '2026-08-30T12:00:00.000Z', lapses: 0 },
         },
       },
     });

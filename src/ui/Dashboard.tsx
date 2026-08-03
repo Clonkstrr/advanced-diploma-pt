@@ -34,8 +34,10 @@ export function Dashboard() {
         <p><Link className="review-due" to="/review">Review due: {dueCount}</Link></p>
       )}
       <p>
-        {last ? (
-          <Link className="cta" to={`/course/${last.courseId}/unit/${last.unitId}`}>
+        {/* Gate on lastUnit, not last: a saved location can point at a unit
+            that a later content version removed. */}
+        {lastUnit ? (
+          <Link className="cta" to={`/course/${last!.courseId}/unit/${last!.unitId}`}>
             Continue where you left off
           </Link>
         ) : (

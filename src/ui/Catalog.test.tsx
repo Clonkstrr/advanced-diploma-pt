@@ -6,7 +6,9 @@ import { StorageAdapter } from '../storage/StorageAdapter';
 import { createProgressStore as makeStore } from '../state/progressStore';
 import { StoreProvider } from '../state/StoreProvider';
 import { Catalog } from './Catalog';
-import { getUnit } from '../content/registry';
+import { getUnit, courses } from '../content/registry';
+
+const FIRST_UNIT_ID = courses[0].units[0].id;
 
 // Progress is seeded before render, mirroring a relaunch that lands on the catalog.
 function renderCatalog(seed?: (store: ReturnType<typeof createProgressStore>) => void) {
@@ -23,6 +25,22 @@ function unitListItem(): HTMLElement {
   return screen.getByRole('link', { name: /APT 501\.1/ }).closest('li')!;
 }
 
+// Marks on every gradeable component, derived from the content itself.
+const GRADEABLE = new Set(['classification', 'numericLab', 'errorId', 'branchingCase', 'evidenceAppraisal']);
+function completeTheUnit(store: ReturnType<typeof createProgressStore>, score: number) {
+  const { unit } = getUnit('apt501', FIRST_UNIT_ID)!;
+  for (const c of unit.components) {
+    if (c.type === 'questionSet') {
+      const answers = Object.fromEntries(
+        c.questions.map((q) => [q.id, q.options.filter((o) => o.correct).map((o) => o.id)]));
+      store.getState().recordAnswers('apt501', unit.id, c.id, answers, score);
+    } else if (GRADEABLE.has(c.type)) {
+      store.getState().recordAnswers('apt501', unit.id, c.id, {}, score);
+    }
+    store.getState().completeComponent('apt501', unit.id, c.id);
+  }
+}
+
 describe('Catalog', () => {
   it('shows no status marker for an untouched unit', () => {
     renderCatalog();
@@ -37,7 +55,7 @@ describe('Catalog', () => {
   });
 
   it('shows "in progress" once any component is completed', () => {
-    const { unit } = getUnit('apt501', 'apt501-u1')!;
+    const { unit } = getUnit('apt501', FIRST_UNIT_ID)!;
     renderCatalog((store) => {
       store.getState().completeComponent('apt501', unit.id, unit.components[0].id);
     });
@@ -45,33 +63,14 @@ describe('Catalog', () => {
     expect(unitListItem().textContent).not.toMatch(/✓/);
   });
 
-  // Mastery answers: full marks on every gradeable component, safety items correct.
-  function masterUnit(store: Parameters<NonNullable<Parameters<typeof renderCatalog>[0]>>[0],
-    quizSafetyAnswer: string) {
-    const { unit } = getUnit('apt501', 'apt501-u1')!;
-    const record = (id: string, answers: Record<string, string[]>, score: number) =>
-      store.getState().recordAnswers('apt501', unit.id, id, answers, score);
-    record('apt501-u1-pretest', {}, 1);
-    record('apt501-u1-lab', {}, 1);
-    record('apt501-u1-case', {}, 1);
-    record('apt501-u1-errorid', {}, 1);
-    record('apt501-u1-quiz', { u1q1: [quizSafetyAnswer] }, 1);
-    record('apt501-u1-cumulative', { cu1: ['a'] }, 1);
-    for (const c of unit.components) {
-      store.getState().completeComponent('apt501', unit.id, c.id);
-    }
-  }
-
   it('shows a check mark with mastery percent when mastered', () => {
-    renderCatalog((store) => masterUnit(store, 'b')); // 'b' = correct safety answer
+    renderCatalog((store) => completeTheUnit(store, 1));
     expect(unitListItem().textContent).toMatch(/100% ✓/);
   });
 
-  // APT 501.1 is gateExempt (she's already a certified PT): even a wrong
-  // safety-critical answer completes the unit rather than flagging review.
-  it('completes a gateExempt unit even when a safety-critical item failed', () => {
-    renderCatalog((store) => masterUnit(store, 'a')); // wrong safety answer
-    expect(unitListItem().textContent).not.toMatch(/needs review/);
-    expect(unitListItem().textContent).toMatch(/✓/);
+  it('shows "needs review" when complete but below the mastery threshold', () => {
+    renderCatalog((store) => completeTheUnit(store, 0.6));
+    expect(unitListItem().textContent).toMatch(/needs review/);
+    expect(unitListItem().textContent).not.toMatch(/✓/);
   });
 });

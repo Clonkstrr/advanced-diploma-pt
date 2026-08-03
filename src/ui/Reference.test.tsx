@@ -15,22 +15,22 @@ function renderAt(path: string) {
 
 describe('Reference', () => {
   it('renders the unit QC block: sources with honest verification badges', () => {
-    renderAt('/reference/apt501/apt501-u1');
+    renderAt('/reference/apt501/apt501-u2');
     expect(screen.getByText(/sources & quality control/i)).toBeInTheDocument();
-    expect(screen.getByText(/CSEP/)).toBeInTheDocument();
-    expect(screen.getByText(/NSCA/)).toBeInTheDocument();
+    expect(screen.getByText(/Greenhalgh/)).toBeInTheDocument();
+    expect(screen.getByText(/CONSORT 2010 Statement/)).toBeInTheDocument();
     // every APT 501.1 source is still awaiting page-level verification
     expect(screen.getAllByText(/pending verification/i).length).toBeGreaterThanOrEqual(5);
     expect(screen.queryAllByText(/^verified$/i)).toHaveLength(0);
   });
 
   it('shows confidence, review dates and controversies — with no scope banner', () => {
-    renderAt('/reference/apt501/apt501-u1');
+    renderAt('/reference/apt501/apt501-u2');
     expect(screen.queryByText(/^scope:/i)).not.toBeInTheDocument();
     expect(screen.getByText(/confidence: high/i)).toBeInTheDocument();
-    expect(screen.getByText(/last reviewed: 2026-07-16/i)).toBeInTheDocument();
-    expect(screen.getByText(/next review: 2027-07-16/i)).toBeInTheDocument();
-    expect(screen.getByText(/vary by country/i)).toBeInTheDocument();
+    expect(screen.getByText(/last reviewed: 2026-08-03/i)).toBeInTheDocument();
+    expect(screen.getByText(/next review: 2027-08-03/i)).toBeInTheDocument();
+    expect(screen.getByText(/known controversies:/i)).toBeInTheDocument();
   });
 
   it('handles unknown units without crashing', () => {
