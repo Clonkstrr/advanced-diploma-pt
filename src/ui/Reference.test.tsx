@@ -24,9 +24,9 @@ describe('Reference', () => {
     expect(screen.queryAllByText(/^verified$/i)).toHaveLength(0);
   });
 
-  it('shows the scope warning prominently plus confidence, review dates and controversies', () => {
+  it('shows confidence, review dates and controversies — with no scope banner', () => {
     renderAt('/reference/apt501/apt501-u1');
-    expect(screen.getByText(/does not diagnose, treat disease/i)).toBeInTheDocument();
+    expect(screen.queryByText(/^scope:/i)).not.toBeInTheDocument();
     expect(screen.getByText(/confidence: high/i)).toBeInTheDocument();
     expect(screen.getByText(/last reviewed: 2026-07-16/i)).toBeInTheDocument();
     expect(screen.getByText(/next review: 2027-07-16/i)).toBeInTheDocument();

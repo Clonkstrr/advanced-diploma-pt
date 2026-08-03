@@ -2,7 +2,7 @@ import { useParams, Link } from 'react-router-dom';
 import { getUnit } from '../content/registry';
 
 // The in-app provenance surface (spec §10): per-unit sources with honest
-// verification badges, confidence, review dates and scope guardrails.
+// verification badges, confidence and review dates.
 export function Reference() {
   const { courseId = '', unitId = '' } = useParams();
   const found = getUnit(courseId, unitId);
@@ -16,10 +16,6 @@ export function Reference() {
       <p className="crumb">{course!.code} · {unit.code}</p>
       <h1>Sources & quality control</h1>
       <h2>{unit.title}</h2>
-
-      {qc.scopeWarning && (
-        <p className="scope-warning"><strong>Scope:</strong> {qc.scopeWarning}</p>
-      )}
 
       <ul className="sources">
         {qc.sources.map((s) => (

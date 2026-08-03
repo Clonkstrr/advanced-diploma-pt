@@ -157,7 +157,8 @@ const componentSchema = rawComponentSchema.superRefine((c, ctx) => {
 
 const unitSchema = z.object({
   id: z.string().min(1), code: z.string().min(1), title: z.string().min(1),
-  summary: z.string().min(1), qc: qcSchema, components: z.array(componentSchema).min(1),
+  summary: z.string().min(1), qc: qcSchema, gateExempt: z.boolean().optional(),
+  components: z.array(componentSchema).min(1),
 }).refine(
   (u) => uniqueIds(u.components),
   { message: 'Component ids within a unit must be unique' },

@@ -69,8 +69,6 @@ textarea { width:100%; min-height:120px; }
   padding:6px 12px; border-radius:8px; text-decoration:none; }
 .next-up { color:var(--accent); }
 .program-progress { font-weight:600; }
-.scope-warning { border-left:3px solid #b3261e; padding:8px 12px; border-radius:0 8px 8px 0;
-  background:color-mix(in srgb, #b3261e 7%, transparent); }
 .sources { padding-left:0; } .sources li { border:1px solid var(--line); border-radius:10px;
   padding:10px 14px; margin:10px 0; list-style:none; }
 .sources .pending { color:#b58a2c; } .sources .verified { color:#2e7d54; }

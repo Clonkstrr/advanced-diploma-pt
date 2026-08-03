@@ -48,6 +48,13 @@ export function unitMastery(unit: Unit, progress: UnitProgress | undefined): Uni
     ? Math.round((scores.reduce((a, b) => a + b, 0) / scores.length) * 100)
     : null;
   const allDone = unit.components.every((c) => progress?.components[c.id]?.completed);
+
+  // gateExempt units complete on step-through: scores stay visible but never
+  // block, and safety-critical items don't gate or flag remediation.
+  if (unit.gateExempt) {
+    return { percent, safetyPassed: true, complete: allDone, remediate: [] };
+  }
+
   const complete = allDone && percent !== null && percent >= MASTERY_THRESHOLD * 100 && safetyPassed;
 
   return { percent, safetyPassed, complete, remediate };

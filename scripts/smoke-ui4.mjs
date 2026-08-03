@@ -67,7 +67,7 @@ async function main() {
   const ref = await bodyText(page);
   check('reference lists the sources', ref.includes('CSEP') && ref.includes('NSCA'));
   check('reference is honest about verification', ref.includes('pending verification'));
-  check('reference shows the scope warning', ref.includes('does not diagnose'));
+  check('reference has no scope banner', !ref.includes('does not diagnose'));
   await page.screenshot({ path: path.join(SHOTS, 'ui4-reference.png') });
 
   // Review empty state

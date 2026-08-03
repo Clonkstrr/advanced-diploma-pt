@@ -60,9 +60,11 @@ describe('Catalog', () => {
     expect(unitListItem().textContent).toMatch(/100% ✓/);
   });
 
-  it('shows "needs review" when complete but a safety-critical item failed', () => {
+  // APT 501.1 is gateExempt (she's already a certified PT): even a wrong
+  // safety-critical answer completes the unit rather than flagging review.
+  it('completes a gateExempt unit even when a safety-critical item failed', () => {
     renderCatalog((store) => masterUnit(store, 'a')); // wrong safety answer
-    expect(unitListItem().textContent).toMatch(/needs review/);
-    expect(unitListItem().textContent).not.toMatch(/✓/);
+    expect(unitListItem().textContent).not.toMatch(/needs review/);
+    expect(unitListItem().textContent).toMatch(/✓/);
   });
 });

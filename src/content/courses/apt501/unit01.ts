@@ -6,6 +6,9 @@ export const unit01: Unit = {
   title: 'Scope of Practice, Role, and Professional Boundaries',
   summary:
     'What a personal trainer is responsible for, where that responsibility ends, and how to tell the difference in real situations.',
+  // She is a certified PT — this unit is familiar ground, so it completes on a
+  // read-through with no 80%/safety-critical gate.
+  gateExempt: true,
   qc: {
     sources: [
       { citation: 'CSEP — Canadian Society for Exercise Physiology: Scope of Practice for the Certified Personal Trainer (CSEP-CPT)', evidenceType: 'Professional standard', verified: false },
@@ -19,8 +22,6 @@ export const unit01: Unit = {
     reviewBy: '2027-07-16',
     jurisdictionNotes:
       'Negligence elements described here follow common-law jurisdictions (Canada, US, UK, Australia); civil-law systems reach similar duties by different routes. Nutrition-advice boundaries are set provincially/at state level.',
-    scopeWarning:
-      'A trainer does not diagnose, treat disease, prescribe medication, or provide medical nutrition therapy. When in doubt, refer.',
     controversies:
       'Exact legal boundaries (e.g., what counts as "nutrition advice" or "corrective exercise") vary by country, state/province, and credential; the term "corrective exercise" itself is debated because it borrows clinical language for non-clinical work.',
   },

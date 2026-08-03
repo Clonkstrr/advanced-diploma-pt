@@ -75,6 +75,18 @@ describe('unitMastery', () => {
     expect(m.complete).toBe(false);
   });
 
+  it('a gateExempt unit completes on step-through: low scores and failed safety items never block', () => {
+    const unit = { ...makeUnit([quiz, lab]), gateExempt: true };
+    const m = unitMastery(unit, progress({
+      quiz: { completed: true, score: 0.5, answers: { 'q-safety': ['b'], 'q-plain': ['b'] } },
+      lab: { completed: true, score: 0.2 },
+    }));
+    expect(m.complete).toBe(true);
+    expect(m.safetyPassed).toBe(true);
+    expect(m.remediate).toEqual([]);
+    expect(m.percent).toBe(35); // scores still reported honestly
+  });
+
   it('unfinished components leave the unit incomplete regardless of scores', () => {
     const m = unitMastery(makeUnit([concept, quiz]), progress({
       quiz: { completed: true, score: 1, answers: { 'q-safety': ['a'], 'q-plain': ['a'] } },

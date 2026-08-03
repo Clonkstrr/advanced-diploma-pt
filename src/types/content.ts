@@ -75,6 +75,9 @@ export interface Unit {
   title: string;
   summary: string;
   qc: QCMetadata;
+  // Familiar-ground units for an already-certified learner: complete on
+  // step-through, with no 80% threshold or safety-critical gating.
+  gateExempt?: boolean;
   components: UnitComponent[];
 }
 
