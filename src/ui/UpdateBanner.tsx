@@ -55,7 +55,7 @@ export function UpdateBanner() {
     <div className="update-banner" role="status">
       {phase.kind === 'available' && (
         <>
-          <span>Version {phase.version} is available — your progress is kept.</span>
+          <span>Version {phase.version} is available. Your progress is kept.</span>
           <button type="button" onClick={() => void install(phase.version)}>Update now</button>
         </>
       )}

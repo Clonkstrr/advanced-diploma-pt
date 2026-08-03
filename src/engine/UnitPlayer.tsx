@@ -121,6 +121,15 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
   const next = () => goTo(index + 1);
   const back = () => goTo(index - 1);
 
+  const [navOpen, setNavOpen] = useState(() => {
+    try { return localStorage.getItem('sectionNav') !== 'closed'; } catch { return true; }
+  });
+  const toggleNav = () => {
+    const next = !navOpen;
+    setNavOpen(next);
+    try { localStorage.setItem('sectionNav', next ? 'open' : 'closed'); } catch { /* preference only */ }
+  };
+
   const labels = useMemo(() => sectionLabels(unit.components), [unit.components]);
   const completedCount = unit.components.filter(
     (c) => unitProgress?.components[c.id]?.completed,
@@ -246,66 +255,87 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
   };
 
   return (
-    <article className="unit-player">
-      <header>
-        <p className="crumb">
-          <Link to="/catalog">← All units</Link>
-          {' · '}
-          {course.code} · {unit.code}
-          {' '}
-          <Link className="ref-link" to={`/reference/${course.id}/${unit.id}`}>Sources & QC</Link>
-          {unit.gateExempt && (
-            <button className="skip-unit" onClick={skipUnit}>Skip unit — mark as done</button>
-          )}
-        </p>
-        <h1>{unit.title}</h1>
+    <div className="unit-shell">
+      {/* Standing table of contents. Every section is one click away, shows
+          whether it is done, and the column folds away for reading room. */}
+      <aside className={navOpen ? 'section-nav open' : 'section-nav collapsed'}>
+        <button type="button" className="section-nav-toggle" aria-expanded={navOpen} onClick={toggleNav}>
+          {navOpen ? 'Hide sections' : 'Show sections'}
+        </button>
 
-        <div className="unit-progress">
-          <div
-            className="progress-track"
-            role="progressbar"
-            aria-label="Unit progress"
-            aria-valuenow={percentDone}
-            aria-valuemin={0}
-            aria-valuemax={100}
-          >
-            <div className="progress-fill" style={{ width: `${percentDone}%` }} />
-          </div>
-          <p className="progress-label">
-            {completedCount} of {unit.components.length} sections done
+        {navOpen && (
+          <>
+            <div className="unit-progress">
+              <div
+                className="progress-track"
+                role="progressbar"
+                aria-label="Unit progress"
+                aria-valuenow={percentDone}
+                aria-valuemin={0}
+                aria-valuemax={100}
+              >
+                <div className="progress-fill" style={{ width: `${percentDone}%` }} />
+              </div>
+              <p className="progress-label">
+                {completedCount} of {unit.components.length} sections done
+              </p>
+            </div>
+
+            <nav className="rail" aria-label="Sections">
+              <ol>
+                {unit.components.map((c, i) => {
+                  const saved = unitProgress?.components[c.id];
+                  const done = !!saved?.completed;
+                  const state = i === index ? 'current' : done ? 'done' : 'todo';
+                  const score = saved?.score;
+                  const scored = typeof score === 'number' ? Math.round(score * 100) : null;
+                  return (
+                    <li key={c.id}>
+                      <button
+                        type="button"
+                        data-state={state}
+                        className={state}
+                        aria-current={i === index ? 'step' : undefined}
+                        aria-label={scored === null ? labels[i] : `${labels[i]}, scored ${scored} percent`}
+                        onClick={() => goTo(i)}
+                      >
+                        <span className="section-label">{labels[i]}</span>
+                        {scored !== null && <span className="section-score">{scored}%</span>}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ol>
+            </nav>
+          </>
+        )}
+      </aside>
+
+      <article className="unit-player">
+        <header>
+          <p className="crumb">
+            <Link to="/catalog">← All units</Link>
+            {' · '}
+            {course.code} · {unit.code}
+            {' '}
+            <Link className="ref-link" to={`/reference/${course.id}/${unit.id}`}>Sources & QC</Link>
+            {unit.gateExempt && (
+              <button className="skip-unit" onClick={skipUnit}>Skip unit, mark as done</button>
+            )}
           </p>
-        </div>
+          <h1>{unit.title}</h1>
+        </header>
 
-        <nav className="rail" aria-label="Sections">
-          <ol>
-            {unit.components.map((c, i) => {
-              const done = !!unitProgress?.components[c.id]?.completed;
-              return (
-                <li key={c.id}>
-                  <button
-                    type="button"
-                    className={i === index ? 'active' : done ? 'done' : ''}
-                    aria-current={i === index ? 'step' : undefined}
-                    onClick={() => goTo(i)}
-                  >
-                    {labels[i]}
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
-        </nav>
-      </header>
+        {/* key (inside renderCurrent) ensures per-component state, e.g. a set's
+            answers, never survives into the next component of the same type */}
+        <div className="component">{renderCurrent()}</div>
 
-      {/* key (inside renderCurrent) ensures per-component state, e.g. a set's
-          answers, never survives into the next component of the same type */}
-      <div className="component">{renderCurrent()}</div>
-
-      <footer className="nav">
-        <button onClick={back} disabled={index === 0}>Back</button>
-        <span>{index + 1} / {unit.components.length}</span>
-        <button onClick={next} disabled={index === unit.components.length - 1}>Next</button>
-      </footer>
-    </article>
+        <footer className="nav">
+          <button onClick={back} disabled={index === 0}>Back</button>
+          <span>{index + 1} / {unit.components.length}</span>
+          <button onClick={next} disabled={index === unit.components.length - 1}>Next</button>
+        </footer>
+      </article>
+    </div>
   );
 }

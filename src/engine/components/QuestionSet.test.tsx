@@ -89,23 +89,24 @@ describe('QuestionSet', () => {
     expect(onComplete).toHaveBeenCalledWith({ answers: { m1: ['x'] }, score: 0 });
   });
 
-  it('disables submit until every question has at least one answer', () => {
-    render(<QuestionSet title="Quiz" questions={[...questions, ...multi]} onComplete={vi.fn()} />);
+  it('allows submitting with questions left unanswered', () => {
+    const onComplete = vi.fn();
+    render(<QuestionSet title="Quiz" questions={[...questions, ...multi]} onComplete={onComplete} />);
     const submit = screen.getByRole('button', { name: /submit/i });
-    expect(submit).toBeDisabled();
-    fireEvent.click(screen.getByLabelText('A'));
-    expect(submit).toBeDisabled(); // multi question still unanswered
-    fireEvent.click(screen.getByLabelText('X'));
-    expect(submit).toBeEnabled();
+    expect(submit).toBeEnabled();               // nothing answered yet
+    fireEvent.click(screen.getByLabelText('A')); // answer one of the two
+    fireEvent.click(submit);
+    // the skipped question simply scores zero rather than blocking the submit
+    expect(onComplete).toHaveBeenCalledWith({ answers: { q1: ['a'] }, score: 0.5 });
   });
 
-  it('re-disables submit when a multi answer is fully unchecked', () => {
-    render(<QuestionSet title="Quiz" questions={multi} onComplete={vi.fn()} />);
-    const submit = screen.getByRole('button', { name: /submit/i });
+  it('says how many questions are still unanswered, and stops saying it once they are', () => {
+    render(<QuestionSet title="Quiz" questions={[...questions, ...multi]} onComplete={vi.fn()} />);
+    expect(screen.getByText(/2 of 2 not answered yet/i)).toBeInTheDocument();
+    fireEvent.click(screen.getByLabelText('A'));
+    expect(screen.getByText(/1 of 2 not answered yet/i)).toBeInTheDocument();
     fireEvent.click(screen.getByLabelText('X'));
-    expect(submit).toBeEnabled();
-    fireEvent.click(screen.getByLabelText('X')); // empty selection again
-    expect(submit).toBeDisabled();
+    expect(screen.queryByText(/not answered yet/i)).not.toBeInTheDocument();
   });
 
   it('restores saved answers and graded state on revisit', () => {

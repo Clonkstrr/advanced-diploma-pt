@@ -48,7 +48,7 @@ describe('UpdateBanner', () => {
     stubBridge({ check: AVAILABLE });
     render(<UpdateBanner />);
     expect(await screen.findByRole('button', { name: /update now/i })).toBeInTheDocument();
-    expect(screen.getByText(/version 0\.3\.0 is available/i)).toBeInTheDocument();
+    expect(screen.getByText(/version 0\.3\.0 is available\. your progress is kept/i)).toBeInTheDocument();
   });
 
   it('downloads and applies the update when the button is pressed', async () => {

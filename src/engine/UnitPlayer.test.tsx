@@ -161,6 +161,31 @@ describe('UnitPlayer', () => {
     expect(screen.getByText('Concept one')).toBeInTheDocument();
   });
 
+  it('can collapse the section column and bring it back', () => {
+    renderSynthetic([
+      { type: 'concept', id: 'c1', heading: 'One', body: 'B' },
+      { type: 'concept', id: 'c2', heading: 'Two', body: 'B' },
+    ]);
+    expect(screen.getByRole('button', { name: /^reading 1$/i })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /hide sections/i }));
+    expect(screen.queryByRole('button', { name: /^reading 1$/i })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /show sections/i }));
+    expect(screen.getByRole('button', { name: /^reading 1$/i })).toBeInTheDocument();
+  });
+
+  it('marks each section in the column as done, current or not started', () => {
+    renderSynthetic([
+      { type: 'concept', id: 'c1', heading: 'One', body: 'B' },
+      { type: 'concept', id: 'c2', heading: 'Two', body: 'B' },
+      { type: 'concept', id: 'c3', heading: 'Three', body: 'B' },
+    ]);
+    expect(screen.getByRole('button', { name: /^reading 1$/i })).toHaveAttribute('data-state', 'current');
+    expect(screen.getByRole('button', { name: /^reading 2$/i })).toHaveAttribute('data-state', 'todo');
+    fireEvent.click(screen.getByRole('button', { name: /^next$/i }));
+    expect(screen.getByRole('button', { name: /^reading 1$/i })).toHaveAttribute('data-state', 'done');
+    expect(screen.getByRole('button', { name: /^reading 2$/i })).toHaveAttribute('data-state', 'current');
+  });
+
   it('shows a unit progress bar that tracks completed sections', () => {
     renderSynthetic([
       { type: 'concept', id: 'c1', heading: 'One', body: 'B' },

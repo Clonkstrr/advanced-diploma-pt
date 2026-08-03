@@ -37,6 +37,7 @@ export function QuestionSet(
   };
 
   const correctCount = questions.filter((q) => gradeQuestion(q, answers[q.id] ?? [])).length;
+  const unansweredCount = questions.filter((q) => (answers[q.id]?.length ?? 0) === 0).length;
 
   return (
     <section className="question-set">
@@ -70,10 +71,18 @@ export function QuestionSet(
           </fieldset>
         );
       })}
+      {/* Skipping a question is allowed: an unanswered one simply scores zero.
+          Blocking submit on a full answer sheet trapped people on a question
+          they wanted to think about later. */}
       {!submitted && (
-        <button onClick={submit} disabled={!questions.every((q) => (answers[q.id]?.length ?? 0) > 0)}>
-          Submit answers
-        </button>
+        <div className="submit-row">
+          <button onClick={submit}>Submit answers</button>
+          {unansweredCount > 0 && (
+            <span className="unanswered-note">
+              {unansweredCount} of {questions.length} not answered yet. You can still submit.
+            </span>
+          )}
+        </div>
       )}
     </section>
   );
