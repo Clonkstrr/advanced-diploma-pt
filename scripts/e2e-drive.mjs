@@ -3,7 +3,7 @@
 // Electron app twice: once fresh (pretest -> ... -> quiz), then again to prove
 // exact resume, then finishes the unit (teach-back + cumulative) to the ✓.
 //
-// Prereqs: vite dev server on :5173, `tsc -p electron/tsconfig.json` output
+// Prereqs: vite dev server on :5600, `tsc -p electron/tsconfig.json` output
 // plus the CJS marker in dist-electron/ (see write-electron-pkg.mjs).
 // Run: node scripts/e2e-drive.mjs   (opens windows — needs Josh's permission)
 // Screenshots land in e2e-shots/. Exit code 0 only if every check passes.
@@ -15,7 +15,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SHOTS = path.join(ROOT, 'e2e-shots');
-const DEV_URL = process.env.ELECTRON_START_URL ?? 'http://localhost:5173';
+const DEV_URL = process.env.ELECTRON_START_URL ?? 'http://localhost:5600';
 // Isolated profile (honoured by main.ts when unpackaged) so the drive never
 // touches or wipes the real user's progress.
 const USER_DATA = path.join(os.tmpdir(), 'advdiploma-e2e-profile');

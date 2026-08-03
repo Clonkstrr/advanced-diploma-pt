@@ -1,6 +1,6 @@
 // Live smoke of the Plan 3+4 surfaces: dashboard, reference/QC, settings
 // (theme persistence across relaunch), review empty state.
-// Prereqs: vite on :5173 + compiled dist-electron. Run: node scripts/smoke-ui4.mjs
+// Prereqs: vite on :5600 + compiled dist-electron. Run: node scripts/smoke-ui4.mjs
 import { _electron as electron } from 'playwright-core';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -21,7 +21,7 @@ async function launch() {
   const app = await electron.launch({
     executablePath: path.join(ROOT, 'node_modules', 'electron', 'dist', 'electron.exe'),
     args: [path.join(ROOT, 'dist-electron', 'main.js')],
-    env: { ...process.env, ELECTRON_START_URL: 'http://localhost:5173', ELECTRON_USER_DATA: USER_DATA },
+    env: { ...process.env, ELECTRON_START_URL: 'http://localhost:5600', ELECTRON_USER_DATA: USER_DATA },
     timeout: 30_000,
   });
   const page = await app.firstWindow();
