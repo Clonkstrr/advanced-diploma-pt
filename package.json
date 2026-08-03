@@ -12,7 +12,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "electron:dev": "concurrently -k \"vite\" \"wait-on tcp:5600 && tsc -p electron/tsconfig.json && node scripts/write-electron-pkg.mjs && cross-env ELECTRON_START_URL=http://localhost:5600 electron dist-electron/main.js\"",
-    "electron:build": "npm run build && tsc -p electron/tsconfig.json && node scripts/write-electron-pkg.mjs && electron-builder"
+    "electron:build": "npm run build && tsc -p electron/tsconfig.json && node scripts/write-electron-pkg.mjs && electron-builder",
+    "bundle:web": "npm run build && node scripts/make-web-bundle.mjs"
   },
   "dependencies": {
     "idb": "^8.0.3",

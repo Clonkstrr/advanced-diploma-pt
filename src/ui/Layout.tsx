@@ -1,4 +1,5 @@
 import { Link, NavLink, Outlet } from 'react-router-dom';
+import { UpdateBanner } from './UpdateBanner';
 
 const linkClass = ({ isActive }: { isActive: boolean }) => (isActive ? 'active' : undefined);
 
@@ -14,6 +15,7 @@ export function Layout() {
           <NavLink to="/settings" className={linkClass}>Settings</NavLink>
         </nav>
       </header>
+      <UpdateBanner />
       <main><Outlet /></main>
     </div>
   );

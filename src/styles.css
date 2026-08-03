@@ -90,10 +90,17 @@ textarea { width:100%; min-height:120px; }
   padding:10px 14px; margin:10px 0; list-style:none; }
 .sources .pending { color:#b58a2c; } .sources .verified { color:#2e7d54; }
 .qc-meta p { margin:4px 0; color:var(--muted); }
+.sources-note { color:var(--muted); font-size:.9rem; max-width:60ch; }
 .ref-link { font-size:.85rem; color:var(--muted); }
 .settings fieldset { border:1px solid var(--line); border-radius:10px; margin:14px 0; padding:12px 16px; }
 .transfer-message { color:var(--accent); }
 .app-header nav a { margin-left:14px; }
 .app-header nav a.active { font-weight:600; text-decoration:underline; text-underline-offset:5px; }
 .dashboard .progress-track { max-width:420px; }
+.update-banner { display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  margin:0 0 16px; padding:10px 14px; border-radius:10px; font-size:.92rem;
+  border:1px solid color-mix(in srgb, var(--accent) 40%, var(--line));
+  background:color-mix(in srgb, var(--accent) 8%, transparent); }
+.update-banner button { font:inherit; font-size:.88rem; padding:5px 14px; border-radius:8px;
+  border:1px solid var(--accent); background:var(--accent); color:#fff; cursor:pointer; }
 a { color:var(--accent); }
