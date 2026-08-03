@@ -29,6 +29,13 @@ describe('Catalog', () => {
     expect(unitListItem().textContent).not.toMatch(/✓|in progress/);
   });
 
+  it('shows the whole program: unauthored courses appear as coming soon', () => {
+    renderCatalog();
+    expect(screen.getByText(/APT 502 — Functional Human Anatomy/)).toBeInTheDocument();
+    expect(screen.getByText(/APT 706 — Supervised Practicum/)).toBeInTheDocument();
+    expect(screen.getAllByText(/coming soon/i)).toHaveLength(23); // 24 courses, 1 authored
+  });
+
   it('shows "in progress" once any component is completed', () => {
     const { unit } = getUnit('apt501', 'apt501-u1')!;
     renderCatalog((store) => {

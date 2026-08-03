@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type { Course, Unit, UnitComponent } from '../types/content';
 import { useProgress } from '../state/StoreProvider';
 import { ConceptBlock } from './components/ConceptBlock';
@@ -39,6 +39,7 @@ const completesOn: { [K in UnitComponent['type']]: 'view' | 'submit' } = {
 };
 
 export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
+  const navigate = useNavigate();
   const setLocation = useProgress((s) => s.setLocation);
   const recordAnswers = useProgress((s) => s.recordAnswers);
   const completeComponent = useProgress((s) => s.completeComponent);
@@ -76,6 +77,15 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
     setIndex((i) => Math.min(i + 1, unit.components.length - 1));
   };
   const back = () => setIndex((i) => Math.max(i - 1, 0));
+
+  // gateExempt units only: mark everything done in one move and return to the
+  // catalog. Nothing is graded, so mastery shows the unit complete (no gate).
+  const skipUnit = () => {
+    for (const c of unit.components) {
+      completeComponent(course.id, unit.id, c.id);
+    }
+    navigate('/catalog');
+  };
 
   // Shared completion handler for every graded component type.
   const onGraded = ({ answers, score }: { answers: Record<string, string[]>; score: number }) => {
@@ -190,9 +200,14 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
     <article className="unit-player">
       <header>
         <p className="crumb">
+          <Link to="/catalog">← All units</Link>
+          {' · '}
           {course.code} · {unit.code}
           {' '}
           <Link className="ref-link" to={`/reference/${course.id}/${unit.id}`}>Sources & QC</Link>
+          {unit.gateExempt && (
+            <button className="skip-unit" onClick={skipUnit}>Skip unit — mark as done</button>
+          )}
         </p>
         <h1>{unit.title}</h1>
         <ol className="rail">

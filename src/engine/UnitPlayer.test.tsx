@@ -51,6 +51,21 @@ describe('UnitPlayer', () => {
     expect(screen.getByText('Before we begin')).toBeInTheDocument();
   });
 
+  it('gateExempt units offer a one-click skip that completes every component', () => {
+    const store = renderUnit(); // apt501-u1 is gateExempt
+    fireEvent.click(screen.getByRole('button', { name: /skip unit/i }));
+    const { unit } = getUnit('apt501', 'apt501-u1')!;
+    const up = store.getState().state.courses['apt501'].units['apt501-u1'];
+    for (const c of unit.components) {
+      expect(up.components[c.id]?.completed).toBe(true);
+    }
+  });
+
+  it('non-exempt units have no skip button', () => {
+    renderSynthetic([{ type: 'concept', id: 'c1', heading: 'H', body: 'B' }]);
+    expect(screen.queryByRole('button', { name: /skip unit/i })).not.toBeInTheDocument();
+  });
+
   it('records location as the learner advances (for resume)', () => {
     const store = renderUnit();
     const { unit } = getUnit('apt501', 'apt501-u1')!;
