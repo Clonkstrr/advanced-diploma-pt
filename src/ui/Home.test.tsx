@@ -28,6 +28,10 @@ describe('Home', () => {
     renderHome();
     expect(screen.getByRole('link', { name: /start the program/i })).toBeInTheDocument();
   });
+  it('shows a program progress bar', () => {
+    renderHome();
+    expect(screen.getByRole('progressbar', { name: /program progress/i })).toBeInTheDocument();
+  });
   it('shows a Start link when the saved location points at a removed unit', () => {
     renderHome({ unitId: 'apt501-u1', componentId: 'apt501-u1-c1' }); // removed scope unit
     expect(screen.getByRole('link', { name: /start the program/i })).toBeInTheDocument();

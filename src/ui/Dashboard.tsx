@@ -12,6 +12,9 @@ export function Dashboard() {
   const allUnits = courses.flatMap((c) =>
     c.units.map((u) => ({ course: c, unit: u, mastery: unitMastery(u, state.courses[c.id]?.units[u.id]) })));
   const masteredCount = allUnits.filter((x) => x.mastery.complete).length;
+  const programPercent = allUnits.length
+    ? Math.round((masteredCount / allUnits.length) * 100)
+    : 0;
   const firstUnmastered = allUnits.find((x) => !x.mastery.complete);
   const last = state.lastLocation;
   const lastUnit = last && getUnit(last.courseId, last.unitId);
@@ -47,6 +50,16 @@ export function Dashboard() {
       <p><Link className="next-up" to={next.to}>{next.label}</Link></p>
 
       <h2>Program progress</h2>
+      <div
+        className="progress-track"
+        role="progressbar"
+        aria-label="Program progress"
+        aria-valuenow={programPercent}
+        aria-valuemin={0}
+        aria-valuemax={100}
+      >
+        <div className="progress-fill" style={{ width: `${programPercent}%` }} />
+      </div>
       <p className="program-progress">
         {masteredCount} of {allUnits.length} units mastered
       </p>

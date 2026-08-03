@@ -1,14 +1,17 @@
-import { Link, Outlet } from 'react-router-dom';
+import { Link, NavLink, Outlet } from 'react-router-dom';
+
+const linkClass = ({ isActive }: { isActive: boolean }) => (isActive ? 'active' : undefined);
 
 export function Layout() {
   return (
     <div className="app">
       <header className="app-header">
-        <Link to="/" className="brand">Advanced Diploma · Personal Training Science & Coaching</Link>
-        <nav>
-          <Link to="/catalog">Catalog</Link>
-          {' '}
-          <Link to="/settings">Settings</Link>
+        <Link to="/" className="brand">Advanced Diploma · Personal Training Science &amp; Coaching</Link>
+        <nav aria-label="Main">
+          <NavLink to="/" end className={linkClass}>Home</NavLink>
+          <NavLink to="/catalog" className={linkClass}>Catalog</NavLink>
+          <NavLink to="/review" className={linkClass}>Review</NavLink>
+          <NavLink to="/settings" className={linkClass}>Settings</NavLink>
         </nav>
       </header>
       <main><Outlet /></main>

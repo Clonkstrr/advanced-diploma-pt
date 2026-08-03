@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import type { Course, Unit, UnitComponent } from '../types/content';
 import { useProgress } from '../state/StoreProvider';
@@ -38,6 +38,45 @@ const completesOn: { [K in UnitComponent['type']]: 'view' | 'submit' } = {
   teachBack: 'submit',
 };
 
+// Rail labels. The rail is a table of contents the learner navigates directly,
+// so it shows what a section *is*, never the internal component type name.
+const SECTION_LABEL: { [K in UnitComponent['type']]: string } = {
+  outcomes: 'What you’ll learn',
+  concept: 'Reading',
+  questionSet: 'Questions',
+  visual: 'Diagram',
+  workedExample: 'Worked example',
+  classification: 'Sorting lab',
+  numericLab: 'Numbers lab',
+  errorId: 'Spot the errors',
+  branchingCase: 'Case',
+  evidenceAppraisal: 'Appraisal',
+  recallSet: 'Recall',
+  teachBack: 'Teach back',
+};
+
+const QUESTION_SET_LABEL: Record<'pretest' | 'quiz' | 'cumulative', string> = {
+  pretest: 'Pretest',
+  quiz: 'Quiz',
+  cumulative: 'Cumulative review',
+};
+
+// Repeated kinds get numbered ("Reading 1..5") so every rail entry is a
+// distinct, clickable destination.
+function sectionLabels(components: UnitComponent[]): string[] {
+  const base = components.map((c) =>
+    c.type === 'questionSet' ? QUESTION_SET_LABEL[c.role] : SECTION_LABEL[c.type]);
+  const totals = new Map<string, number>();
+  for (const label of base) totals.set(label, (totals.get(label) ?? 0) + 1);
+  const seen = new Map<string, number>();
+  return base.map((label) => {
+    if ((totals.get(label) ?? 0) < 2) return label;
+    const n = (seen.get(label) ?? 0) + 1;
+    seen.set(label, n);
+    return `${label} ${n}`;
+  });
+}
+
 export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
   const navigate = useNavigate();
   const setLocation = useProgress((s) => s.setLocation);
@@ -70,13 +109,23 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
     }
   }, [isLast, course.id, unit.id, current.id, current.type, completeComponent]);
 
-  const next = () => {
+  // Every section is reachable from anywhere: the rail, Back and Next all go
+  // through goTo. Leaving a read-only section still marks it seen, so browsing
+  // out of order keeps progress honest rather than resetting it.
+  const goTo = (target: number) => {
     if (completesOn[current.type] === 'view') {
       completeComponent(course.id, unit.id, current.id);
     }
-    setIndex((i) => Math.min(i + 1, unit.components.length - 1));
+    setIndex(Math.min(Math.max(target, 0), unit.components.length - 1));
   };
-  const back = () => setIndex((i) => Math.max(i - 1, 0));
+  const next = () => goTo(index + 1);
+  const back = () => goTo(index - 1);
+
+  const labels = useMemo(() => sectionLabels(unit.components), [unit.components]);
+  const completedCount = unit.components.filter(
+    (c) => unitProgress?.components[c.id]?.completed,
+  ).length;
+  const percentDone = Math.round((completedCount / unit.components.length) * 100);
 
   // gateExempt units only: mark everything done in one move and return to the
   // catalog. Nothing is graded, so mastery shows the unit complete (no gate).
@@ -210,11 +259,42 @@ export function UnitPlayer({ course, unit }: { course: Course; unit: Unit }) {
           )}
         </p>
         <h1>{unit.title}</h1>
-        <ol className="rail">
-          {unit.components.map((c, i) => (
-            <li key={c.id} className={i === index ? 'active' : i < index ? 'done' : ''}>{c.type}</li>
-          ))}
-        </ol>
+
+        <div className="unit-progress">
+          <div
+            className="progress-track"
+            role="progressbar"
+            aria-label="Unit progress"
+            aria-valuenow={percentDone}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
+            <div className="progress-fill" style={{ width: `${percentDone}%` }} />
+          </div>
+          <p className="progress-label">
+            {completedCount} of {unit.components.length} sections done
+          </p>
+        </div>
+
+        <nav className="rail" aria-label="Sections">
+          <ol>
+            {unit.components.map((c, i) => {
+              const done = !!unitProgress?.components[c.id]?.completed;
+              return (
+                <li key={c.id}>
+                  <button
+                    type="button"
+                    className={i === index ? 'active' : done ? 'done' : ''}
+                    aria-current={i === index ? 'step' : undefined}
+                    onClick={() => goTo(i)}
+                  >
+                    {labels[i]}
+                  </button>
+                </li>
+              );
+            })}
+          </ol>
+        </nav>
       </header>
 
       {/* key (inside renderCurrent) ensures per-component state, e.g. a set's

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import type { Course, Question, Unit } from '../types/content';
 import { StorageAdapter } from '../storage/StorageAdapter';
@@ -142,6 +142,36 @@ describe('UnitPlayer', () => {
     const recall = store.getState().state.recall!;
     expect(recall['testc/test-u1/k1'].lapses).toBe(0);
     expect(recall['testc/test-u1/k2'].lapses).toBe(1);
+  });
+
+  it('lets the learner jump straight to any section without stepping through', () => {
+    renderSynthetic([
+      { type: 'questionSet', id: 'qs1', role: 'pretest', title: 'Before we begin', questions: [singleQuestion('q1', 'First prompt')] },
+      { type: 'concept', id: 'c1', heading: 'Concept one', body: 'B1' },
+      { type: 'concept', id: 'c2', heading: 'Concept two', body: 'B2' },
+      { type: 'teachBack', id: 'tb1', title: 'Teach it back', prompt: 'P', modelAnswer: 'M',
+        rubric: [{ id: 'r1', text: 'one' }, { id: 'r2', text: 'two' }] },
+    ]);
+    const rail = screen.getByRole('navigation', { name: /sections/i });
+    fireEvent.click(within(rail).getByRole('button', { name: /teach back/i }));
+    expect(screen.getByText('Teach it back')).toBeInTheDocument();
+    expect(screen.queryByText('Before we begin')).not.toBeInTheDocument();
+    // and back again, in one move
+    fireEvent.click(within(rail).getByRole('button', { name: /concept one|^reading 1$/i }));
+    expect(screen.getByText('Concept one')).toBeInTheDocument();
+  });
+
+  it('shows a unit progress bar that tracks completed sections', () => {
+    renderSynthetic([
+      { type: 'concept', id: 'c1', heading: 'One', body: 'B' },
+      { type: 'concept', id: 'c2', heading: 'Two', body: 'B' },
+      { type: 'concept', id: 'c3', heading: 'Three', body: 'B' },
+    ]);
+    expect(screen.getByRole('progressbar', { name: /unit progress/i }))
+      .toHaveAttribute('aria-valuenow', '0');
+    fireEvent.click(screen.getByRole('button', { name: /^next$/i }));
+    expect(screen.getByRole('progressbar', { name: /unit progress/i }))
+      .toHaveAttribute('aria-valuenow', '33');
   });
 
   it('marks a final non-interactive component complete on view', () => {
