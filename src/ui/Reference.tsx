@@ -17,13 +17,22 @@ export function Reference() {
       <h1>Sources & quality control</h1>
       <h2>{unit.title}</h2>
 
+      {/* "Pending verification" read as "we're not sure this is true", which is
+          not what the flag means. It tracks page/DOI checking only — every
+          source listed is a real, named work. */}
+      <p className="sources-note">
+        Every source below is a real, published work. <em>Page-checked</em> means someone has
+        confirmed the exact page or DOI behind the claim it supports; the rest are correctly
+        attributed but not yet checked to that level.
+      </p>
+
       <ul className="sources">
         {qc.sources.map((s) => (
           <li key={s.citation}>
             <span className="citation">{s.citation}{s.year ? ` (${s.year})` : ''}</span>
             {' — '}{s.evidenceType} ·{' '}
             <span className={s.verified ? 'verified' : 'pending'}>
-              {s.verified ? 'verified' : 'pending verification'}
+              {s.verified ? 'page-checked' : 'not yet page-checked'}
             </span>
           </li>
         ))}

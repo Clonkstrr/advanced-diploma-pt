@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { Reference } from './Reference';
 
@@ -19,9 +19,16 @@ describe('Reference', () => {
     expect(screen.getByText(/sources & quality control/i)).toBeInTheDocument();
     expect(screen.getByText(/Greenhalgh/)).toBeInTheDocument();
     expect(screen.getByText(/CONSORT 2010 Statement/)).toBeInTheDocument();
-    // every APT 501.1 source is still awaiting page-level verification
-    expect(screen.getAllByText(/pending verification/i).length).toBeGreaterThanOrEqual(5);
-    expect(screen.queryAllByText(/^verified$/i)).toHaveLength(0);
+    // every APT 501.1 source is still awaiting page-level verification.
+    // Scoped to the source list: the explainer above it also says "page-checked".
+    const sources = screen.getByRole('list');
+    expect(within(sources).getAllByText(/not yet page-checked/i).length).toBeGreaterThanOrEqual(5);
+    expect(within(sources).queryAllByText(/^page-checked$/i)).toHaveLength(0);
+  });
+
+  it('explains what the page-checked flag does and does not mean', () => {
+    renderAt('/reference/apt501/apt501-u2');
+    expect(screen.getByText(/every source below is a real, published work/i)).toBeInTheDocument();
   });
 
   it('shows confidence, review dates and controversies — with no scope banner', () => {
