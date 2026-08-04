@@ -32,12 +32,12 @@ export function LowerLimbHipShape() {
 
       {/* ── row 1: socket depth, viewed from the front ── */}
       {/* shallow */}
-      <path d="M 142.26 133.48 A 34 34 0 0 1 186.95 176.63" fill="none" stroke="currentColor" strokeWidth="2.4" />
+      <path d="M 139.56 134.71 A 34 34 0 0 1 186.95 176.63" fill="none" stroke="currentColor" strokeWidth="2.4" />
       <circle cx="155" cy="165" r="26" fill="none" stroke="currentColor" strokeWidth="1.6" />
       <line x1="155" y1="165" x2="155" y2="110" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
-      <line x1="155" y1="165" x2="138.52" y2="124.20" stroke="currentColor" strokeWidth="1.4" />
-      <path d="M 155 119 A 46 46 0 0 0 137.77 122.35" fill="none" stroke="currentColor" strokeWidth="1.1" />
-      <text x="165" y="112" fill="currentColor" fontSize="11">centre-edge ≈ 22°</text>
+      <line x1="155" y1="165" x2="135.02" y2="125.80" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M 155 119 A 46 46 0 0 0 134.12 124.01" fill="none" stroke="currentColor" strokeWidth="1.1" />
+      <text x="165" y="112" fill="currentColor" fontSize="11">centre-edge ≈ 27°</text>
       <text x="155" y="202" textAnchor="middle" fill="currentColor" fontSize="10">less bony cover, more room in flexion</text>
 
       {/* average */}
@@ -50,12 +50,12 @@ export function LowerLimbHipShape() {
       <text x="450" y="202" textAnchor="middle" fill="currentColor" fontSize="10">the usual amount of cover</text>
 
       {/* deep */}
-      <path d="M 721.81 140.13 A 34 34 0 0 1 776.95 176.63" fill="none" stroke="currentColor" strokeWidth="2.4" />
+      <path d="M 724.07 138.21 A 34 34 0 0 1 776.95 176.63" fill="none" stroke="currentColor" strokeWidth="2.4" />
       <circle cx="745" cy="165" r="26" fill="none" stroke="currentColor" strokeWidth="1.6" />
       <line x1="745" y1="165" x2="745" y2="110" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
-      <line x1="745" y1="165" x2="714.99" y2="132.82" stroke="currentColor" strokeWidth="1.4" />
-      <path d="M 745 119 A 46 46 0 0 0 713.63 131.35" fill="none" stroke="currentColor" strokeWidth="1.1" />
-      <text x="755" y="112" fill="currentColor" fontSize="11">centre-edge ≈ 43°</text>
+      <line x1="745" y1="165" x2="717.91" y2="130.33" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M 745 119 A 46 46 0 0 0 716.68 128.75" fill="none" stroke="currentColor" strokeWidth="1.1" />
+      <text x="755" y="112" fill="currentColor" fontSize="11">centre-edge ≈ 38°</text>
       <text x="745" y="202" textAnchor="middle" fill="currentColor" fontSize="10">more cover, the neck meets the rim sooner</text>
 
       {/* ── row 2: femoral version, viewed from above ── */}

@@ -12,7 +12,8 @@ export function ShoulderDeltoidCuffCouple() {
         Four panels. Panel A: deltoid pulling on its own, its line of pull almost parallel to the
         shaft of the humerus, driving the head upwards. Panel B: deltoid plus the inferior cuff,
         producing rotation about a centre that barely moves. Panel C: the front-to-back pair,
-        subscapularis against infraspinatus and teres minor, seen from above. Panel D: what happens
+        subscapularis against infraspinatus and teres minor, seen from above with the front of the
+        body at the top and the forward slide they prevent crossed out. Panel D: what happens
         when the cuff gives way, and how the rotator cable carries load around a defect
       </title>
       <defs>
@@ -74,21 +75,22 @@ export function ShoulderDeltoidCuffCouple() {
       {/* ══ PANEL C — the transverse-plane pair ═════════════════════════════ */}
       <text x="24" y="360" fill="currentColor" fontSize="12" letterSpacing="2">C · THE FRONT-TO-BACK PAIR</text>
       <rect x="14" y="366" width="380" height="324" rx="10" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.55" />
-      <text x="24" y="390" fill="currentColor" fontSize="11" fontStyle="italic">right shoulder seen from above</text>
+      <text x="24" y="390" fill="currentColor" fontSize="11" fontStyle="italic">right shoulder seen from above, front of the body at the top</text>
 
       <circle cx="200" cy="490" r="46" fill="none" stroke="currentColor" strokeWidth="1.8" />
       <path d="M 156 450 Q 132 490 156 530" fill="none" stroke="currentColor" strokeWidth="2.5" />
-      <line x1="200" y1="418" x2="178" y2="450" stroke="currentColor" strokeWidth="2" markerEnd="url(#sdc-arrow)" />
-      <text x="208" y="416" fill="currentColor" fontSize="12">subscapularis, in front</text>
+      <line x1="252" y1="428" x2="222" y2="454" stroke="currentColor" strokeWidth="2" markerEnd="url(#sdc-arrow)" />
+      <text x="260" y="418" fill="currentColor" fontSize="11">subscapularis,</text>
+      <text x="260" y="432" fill="currentColor" fontSize="11">in front</text>
       <line x1="200" y1="562" x2="178" y2="530" stroke="currentColor" strokeWidth="2" markerEnd="url(#sdc-arrow)" />
-      <text x="208" y="562" fill="currentColor" fontSize="12">infraspinatus and teres</text>
-      <text x="208" y="578" fill="currentColor" fontSize="12">minor, behind</text>
-      <line x1="248" y1="490" x2="296" y2="490" stroke="currentColor" strokeWidth="1.5"
+      <text x="208" y="562" fill="currentColor" fontSize="11">infraspinatus and teres</text>
+      <text x="208" y="578" fill="currentColor" fontSize="11">minor, behind</text>
+      <line x1="200" y1="443" x2="200" y2="404" stroke="currentColor" strokeWidth="1.5"
         strokeDasharray="5 4" markerEnd="url(#sdc-arrow)" />
-      <line x1="262" y1="478" x2="286" y2="502" stroke="currentColor" strokeWidth="2" />
-      <line x1="286" y1="478" x2="262" y2="502" stroke="currentColor" strokeWidth="2" />
-      <text x="302" y="486" fill="currentColor" fontSize="11">sliding</text>
-      <text x="302" y="500" fill="currentColor" fontSize="11">forwards</text>
+      <line x1="190" y1="414" x2="210" y2="434" stroke="currentColor" strokeWidth="2" />
+      <line x1="210" y1="414" x2="190" y2="434" stroke="currentColor" strokeWidth="2" />
+      <text x="118" y="417" fill="currentColor" fontSize="11">sliding</text>
+      <text x="118" y="431" fill="currentColor" fontSize="11">forwards</text>
       <text x="24" y="640" fill="currentColor" fontSize="11">
         Balanced pulls at the front and the back stop the head
       </text>

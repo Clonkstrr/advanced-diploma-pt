@@ -26,7 +26,7 @@ export function ShoulderToHandChain() {
       {/* ══ PANEL A — hinge versus load path ════════════════════════════════ */}
       <text x="24" y="28" fill="currentColor" fontSize="12" letterSpacing="2">A · THE HINGE IS NOT THE LOAD PATH</text>
       <rect x="14" y="34" width="380" height="400" rx="10" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.55" />
-      <text x="24" y="56" fill="currentColor" fontSize="11" fontStyle="italic">right elbow from the front, arm near straight</text>
+      <text x="24" y="56" fill="currentColor" fontSize="11" fontStyle="italic">left elbow from the front, arm near straight</text>
 
       <line x1="170" y1="76" x2="170" y2="146" stroke="currentColor" strokeWidth="5" />
       <text x="180" y="92" fill="currentColor" fontSize="11">humerus</text>
@@ -57,6 +57,7 @@ export function ShoulderToHandChain() {
       {/* ══ PANEL B — where the forearm turns ═══════════════════════════════ */}
       <text x="416" y="28" fill="currentColor" fontSize="12" letterSpacing="2">B · WHERE THE FOREARM TURNS</text>
       <rect x="406" y="34" width="380" height="400" rx="10" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.55" />
+      <text x="416" y="56" fill="currentColor" fontSize="11" fontStyle="italic">same left forearm from the front, starting palm up</text>
 
       <circle cx="580" cy="100" r="12" fill="none" stroke="currentColor" strokeWidth="1.8" />
       <line x1="500" y1="96" x2="508" y2="290" stroke="currentColor" strokeWidth="4.5" />
