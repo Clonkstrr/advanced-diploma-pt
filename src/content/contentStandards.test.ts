@@ -8,8 +8,7 @@ import type { Unit } from '../types/content';
 // with no anchor, a unit carrying a single diagram.
 //
 // Courses are opted in as they complete the plain-language and structure pass.
-// APT 501 predates it and is not in this list yet.
-const PASSED = ['apt502'];
+const PASSED = ['apt501', 'apt502'];
 
 const DASH = /[—–]/;
 
