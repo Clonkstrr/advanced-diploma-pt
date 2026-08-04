@@ -11,7 +11,11 @@ export function TrunkCanister() {
       <title id="tc-title">
         The trunk as a pressure canister — diaphragm as roof, pelvic floor as base, transversus
         abdominis and obliques as walls, multifidus and thoracolumbar fascia behind — shown beside
-        the spinal curves and the lumbopelvic rhythm at the hip, pelvis and spine junction
+        the spinal curves and the lumbopelvic rhythm at the hip, pelvis and spine junction.
+        Circled numbers 1 to 4 mark the four notes listed beneath the figure: 1 the sealed
+        boundary, 2 the pressure acting outward on every surface, 3 the curve column and its
+        facet orientations, 4 form and force closure at the base. Circled a and b mark the
+        order of the bend in the lumbopelvic rhythm panel
       </title>
       <defs>
         <marker id="tc-arrow" viewBox="0 0 10 10" refX="9" refY="5"
@@ -138,6 +142,11 @@ export function TrunkCanister() {
 
       <text x="629" y="466" textAnchor="middle" fill="currentColor" fontSize="11" fontStyle="italic">
         (Curve size varies widely between healthy people.)
+      </text>
+
+      {/* marker key: numbers belong to the callouts, letters to the bend sequence */}
+      <text x="410" y="494" textAnchor="middle" fill="currentColor" fontSize="10" fontStyle="italic">
+        Circled 1–4 mark the numbered notes beneath the figure; circled a and b mark the order of the bend.
       </text>
 
       {/* ── BOTTOM STRIP: lumbopelvic rhythm ──────────────────────────── */}

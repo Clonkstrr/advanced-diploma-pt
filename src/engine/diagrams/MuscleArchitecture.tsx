@@ -6,8 +6,11 @@ const UNI_FIBRES = [270, 290, 310, 330, 350, 370, 390];
 const BI_FIBRES = [480, 500, 520, 540, 560, 580, 600];
 // Multipennate: fibre origins along two internal tendon septa.
 const MULTI_FIBRES = [686, 706, 726, 746, 766, 786, 806];
-// Panel B: the enlarged unipennate muscle, tendon at y = 462, aponeurosis at y = 360.
-const PANEL_B_FIBRES = [84, 110, 136, 162, 188, 214, 240, 266, 292];
+// Panel B: the enlarged unipennate muscle, deep tendon at y = 462, aponeurosis at y = 416.
+// Each fibre runs (x, 462) -> (x + 99, 416): atan(46 / 99) = 24.9 degrees, so the drawn
+// pennation angle matches the cosine table printed beside it. Panel B is the panel that
+// quantifies the angle, so it is the panel that has to be to scale.
+const PANEL_B_FIBRES = [50, 75, 100, 125, 150, 175, 200, 225, 250];
 
 export function MuscleArchitecture() {
   return (
@@ -103,38 +106,46 @@ export function MuscleArchitecture() {
       <text x="440" y="264" textAnchor="middle" fill="currentColor" fontSize="11.5">
         At equal muscle volume, packing in more fibres buys force and spends excursion.
       </text>
+      <text x="440" y="281" textAnchor="middle" fill="currentColor" fontSize="10" fontStyle="italic">
+        Fibre angles in A are exaggerated so the packing pattern reads at this size. B below is drawn to scale.
+      </text>
 
       {/* ═══ BAND B · pennation angle, PCSA vs ACSA ════════════════════════ */}
       <text x="440" y="300" textAnchor="middle" fill="currentColor" fontSize="13.5" fontWeight="bold">
         B · Pennation angle: the tax it charges and the fibres it buys
       </text>
 
-      {/* enlarged unipennate muscle */}
-      <line x1="70" y1="360" x2="370" y2="360" stroke="currentColor" strokeWidth="2" />
-      <line x1="60" y1="462" x2="360" y2="462" stroke="currentColor" strokeWidth="3.4" />
+      {/* enlarged unipennate muscle, drawn at a true 25° pennation angle */}
+      <line x1="128" y1="416" x2="372" y2="416" stroke="currentColor" strokeWidth="2" />
+      <line x1="38" y1="462" x2="322" y2="462" stroke="currentColor" strokeWidth="3.4" />
       {PANEL_B_FIBRES.map((x) => (
-        <line key={`pb-${x}`} x1={x} y1="462" x2={x + 36} y2="360"
-          stroke="currentColor" strokeWidth={x === 188 ? 2.4 : 1} />
+        <line key={`pb-${x}`} x1={x} y1="462" x2={x + 99} y2="416"
+          stroke="currentColor" strokeWidth={x === 250 ? 2.4 : 1} />
       ))}
-      {/* pennation angle at the highlighted fibre */}
-      <path d="M218 462 A 30 30 0 0 0 198 434" fill="none" stroke="currentColor" strokeWidth="1.2" />
-      <text x="216" y="450" fill="currentColor" fontSize="12.5" fontStyle="italic">&#952;</text>
+      {/* pennation angle at the highlighted fibre: a 25° arc, so θ reads the same off the
+          muscle as it does off the cosine table on the right of this band */}
+      <path d="M290 462 A 40 40 0 0 0 286.3 445.2" fill="none" stroke="currentColor" strokeWidth="1.2" />
+      <text x="294" y="455" fill="currentColor" fontSize="12.5" fontStyle="italic">&#952;</text>
       {/* anatomical cross-section: one cut perpendicular to the long axis */}
-      <line x1="222" y1="356" x2="222" y2="466" stroke="currentColor" strokeWidth="1.3" strokeDasharray="5 4" />
-      <text x="222" y="348" textAnchor="middle" fill="currentColor" fontSize="12" fontWeight="bold">a</text>
+      <line x1="200" y1="408" x2="200" y2="470" stroke="currentColor" strokeWidth="1.3" strokeDasharray="5 4" />
+      <text x="200" y="400" textAnchor="middle" fill="currentColor" fontSize="12" fontWeight="bold">a</text>
       {/* physiological cross-section: cut perpendicular to the fibres */}
-      <line x1="140" y1="380" x2="281" y2="431" stroke="currentColor" strokeWidth="1.3" strokeDasharray="5 4" />
-      <text x="128" y="376" textAnchor="middle" fill="currentColor" fontSize="12" fontWeight="bold">p</text>
-      <text x="200" y="392" textAnchor="middle" fill="currentColor" fontSize="10.5" fontStyle="italic">tendon</text>
+      <line x1="150" y1="410" x2="176" y2="466" stroke="currentColor" strokeWidth="1.3" strokeDasharray="5 4" />
+      <text x="140" y="404" textAnchor="middle" fill="currentColor" fontSize="12" fontWeight="bold">p</text>
+      <text x="296" y="408" textAnchor="middle" fill="currentColor" fontSize="10.5" fontStyle="italic">aponeurosis</text>
+      <text x="38" y="484" textAnchor="start" fill="currentColor" fontSize="10.5" fontStyle="italic">tendon</text>
 
-      <text x="200" y="490" textAnchor="middle" fill="currentColor" fontSize="11">
+      <text x="200" y="488" textAnchor="middle" fill="currentColor" fontSize="11">
         a · anatomical CSA — one cut across the belly
       </text>
-      <text x="200" y="506" textAnchor="middle" fill="currentColor" fontSize="11">
-        p · physiological CSA — cut across the fibres
+      <text x="200" y="504" textAnchor="middle" fill="currentColor" fontSize="11">
+        p · physiological CSA — cut across the fibres, then summed over all of them
       </text>
-      <text x="200" y="528" textAnchor="middle" fill="currentColor" fontSize="12">
+      <text x="200" y="524" textAnchor="middle" fill="currentColor" fontSize="12">
         PCSA = (volume &#215; cos &#952;) &#247; fibre length
+      </text>
+      <text x="200" y="541" textAnchor="middle" fill="currentColor" fontSize="10.5" fontStyle="italic">
+        &#952; is drawn here at 25&#176;, inside the range human muscles actually use at rest.
       </text>
 
       {/* force decomposition */}
@@ -154,7 +165,7 @@ export function MuscleArchitecture() {
         A small tax on force, paid for a large gain in fibre count.
       </text>
 
-      <text x="440" y="556" textAnchor="middle" fill="currentColor" fontSize="11.5">
+      <text x="440" y="562" textAnchor="middle" fill="currentColor" fontSize="11.5">
         What pennation really costs is excursion: short fibres shorten less, so range and peak speed fall.
       </text>
 

@@ -9,10 +9,12 @@ export function ScapulohumeralRhythm() {
       className="diagram"
     >
       <title id="shr-title">
-        The shoulder complex as four joints — sternoclavicular, acromioclavicular, glenohumeral and
-        the scapulothoracic articulation — with scapulohumeral rhythm across arm elevation, the
-        upper trapezius, lower trapezius and serratus anterior force couple that upwardly rotates
-        the scapula, and how scapular position changes the subacromial space
+        Four panels, lettered A to D. Panel A: the shoulder complex as four joints, numbered in
+        roman numerals — sternoclavicular (I), acromioclavicular (II), glenohumeral (III) and the
+        scapulothoracic articulation (IV). Panel B: scapulohumeral rhythm across arm elevation,
+        including the setting phase. Panel C: the upper trapezius, lower trapezius and serratus
+        anterior force couple that upwardly rotates the scapula. Panel D: how scapular position
+        changes the subacromial space
       </title>
       <defs>
         <marker id="shr-arrow" viewBox="0 0 10 10" refX="9" refY="5"
@@ -22,7 +24,7 @@ export function ScapulohumeralRhythm() {
       </defs>
 
       {/* ══ PANEL A — the four joints ═══════════════════════════════════════ */}
-      <text x="24" y="28" fill="currentColor" fontSize="11" letterSpacing="2">THE FOUR JOINTS</text>
+      <text x="24" y="28" fill="currentColor" fontSize="11" letterSpacing="2">A · THE FOUR JOINTS</text>
       <rect x="14" y="34" width="382" height="268" rx="10" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.55" />
       <text x="30" y="56" fill="currentColor" fontSize="10" fontStyle="italic">right shoulder girdle, schematic, seen from behind and above</text>
 
@@ -53,40 +55,40 @@ export function ScapulohumeralRhythm() {
       <line x1="202" y1="230" x2="240" y2="246" stroke="currentColor" strokeWidth="1.2"
         strokeDasharray="4 4" markerStart="url(#shr-arrow)" markerEnd="url(#shr-arrow)" />
 
-      {/* numbered joint badges */}
+      {/* joint badges — roman numerals, kept distinct from the arabic callout numbers below the figure */}
       <circle cx="76" cy="160" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <text x="76" y="164" textAnchor="middle" fill="currentColor" fontSize="11">1</text>
+      <text x="76" y="164" textAnchor="middle" fill="currentColor" fontSize="10">I</text>
       <circle cx="276" cy="134" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <text x="276" y="138" textAnchor="middle" fill="currentColor" fontSize="11">2</text>
+      <text x="276" y="138" textAnchor="middle" fill="currentColor" fontSize="10">II</text>
       <circle cx="296" cy="234" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <text x="296" y="238" textAnchor="middle" fill="currentColor" fontSize="11">3</text>
+      <text x="296" y="238" textAnchor="middle" fill="currentColor" fontSize="10">III</text>
       <line x1="297" y1="224" x2="299" y2="208" stroke="currentColor" strokeWidth="1" />
       <circle cx="216" cy="212" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <text x="216" y="216" textAnchor="middle" fill="currentColor" fontSize="11">4</text>
+      <text x="216" y="216" textAnchor="middle" fill="currentColor" fontSize="10">IV</text>
 
       {/* ══ PANEL A legend ══════════════════════════════════════════════════ */}
       <rect x="406" y="34" width="360" height="268" rx="10" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.55" />
 
       <circle cx="428" cy="68" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <text x="428" y="72" textAnchor="middle" fill="currentColor" fontSize="11">1</text>
+      <text x="428" y="72" textAnchor="middle" fill="currentColor" fontSize="10">I</text>
       <text x="448" y="62" fill="currentColor" fontSize="11">Sternoclavicular — the only bony link between</text>
       <text x="448" y="76" fill="currentColor" fontSize="11">the arm and the axial skeleton. Elevates,</text>
       <text x="448" y="90" fill="currentColor" fontSize="11">retracts, and rotates posteriorly on its own axis.</text>
 
       <circle cx="428" cy="124" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <text x="428" y="128" textAnchor="middle" fill="currentColor" fontSize="11">2</text>
+      <text x="428" y="128" textAnchor="middle" fill="currentColor" fontSize="10">II</text>
       <text x="448" y="118" fill="currentColor" fontSize="11">Acromioclavicular — a small plane joint. Lets</text>
       <text x="448" y="132" fill="currentColor" fontSize="11">the scapula rotate on the clavicle; a modest</text>
       <text x="448" y="146" fill="currentColor" fontSize="11">share of the total, most of it late in the range.</text>
 
       <circle cx="428" cy="180" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <text x="428" y="184" textAnchor="middle" fill="currentColor" fontSize="11">3</text>
+      <text x="428" y="184" textAnchor="middle" fill="currentColor" fontSize="10">III</text>
       <text x="448" y="174" fill="currentColor" fontSize="11">Glenohumeral — the least bony constraint in the</text>
       <text x="448" y="188" fill="currentColor" fontSize="11">body: the glenoid faces about a third of the head.</text>
       <text x="448" y="202" fill="currentColor" fontSize="11">Range is bought with instability.</text>
 
       <circle cx="428" cy="236" r="10" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <text x="428" y="240" textAnchor="middle" fill="currentColor" fontSize="11">4</text>
+      <text x="428" y="240" textAnchor="middle" fill="currentColor" fontSize="10">IV</text>
       <text x="448" y="230" fill="currentColor" fontSize="11">Scapulothoracic — not a true joint. No capsule,</text>
       <text x="448" y="244" fill="currentColor" fontSize="11">no cartilage: a gliding muscular interface on</text>
       <text x="448" y="258" fill="currentColor" fontSize="11">the rib cage, driven entirely by muscle.</text>
@@ -96,7 +98,7 @@ export function ScapulohumeralRhythm() {
       </text>
 
       {/* ══ PANEL B — scapulohumeral rhythm ═════════════════════════════════ */}
-      <text x="24" y="332" fill="currentColor" fontSize="11" letterSpacing="2">SCAPULOHUMERAL RHYTHM</text>
+      <text x="24" y="332" fill="currentColor" fontSize="11" letterSpacing="2">B · SCAPULOHUMERAL RHYTHM</text>
       <rect x="14" y="314" width="376" height="286" rx="10" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.55" />
       <text x="24" y="352" fill="currentColor" fontSize="10" fontStyle="italic">who contributes what across 180° of elevation</text>
 
@@ -132,7 +134,7 @@ export function ScapulohumeralRhythm() {
       </text>
 
       {/* ══ PANEL C — the force couple ══════════════════════════════════════ */}
-      <text x="410" y="332" fill="currentColor" fontSize="11" letterSpacing="2">THE UPWARD-ROTATION FORCE COUPLE</text>
+      <text x="410" y="332" fill="currentColor" fontSize="11" letterSpacing="2">C · THE UPWARD-ROTATION FORCE COUPLE</text>
       <rect x="400" y="314" width="366" height="286" rx="10" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.55" />
 
       {/* scapula, posterior view */}
@@ -160,7 +162,7 @@ export function ScapulohumeralRhythm() {
       <text x="410" y="584" fill="currentColor" fontSize="10">produces all three — its failure wings the medial border.</text>
 
       {/* ══ PANEL D — subacromial space ═════════════════════════════════════ */}
-      <text x="24" y="630" fill="currentColor" fontSize="11" letterSpacing="2">SUBACROMIAL SPACE AND SCAPULAR POSITION</text>
+      <text x="24" y="630" fill="currentColor" fontSize="11" letterSpacing="2">D · SUBACROMIAL SPACE AND SCAPULAR POSITION</text>
       <rect x="14" y="636" width="752" height="188" rx="10" fill="none" stroke="currentColor" strokeWidth="1" opacity="0.55" />
 
       {/* inset 1 — upwardly rotated, posteriorly tilted */}

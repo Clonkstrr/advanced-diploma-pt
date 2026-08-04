@@ -7,6 +7,7 @@ import { createProgressStore as makeStore } from '../state/progressStore';
 import { StoreProvider } from '../state/StoreProvider';
 import { Catalog } from './Catalog';
 import { getUnit, courses } from '../content/registry';
+import { curriculum } from '../content/curriculum';
 
 const FIRST_UNIT_ID = courses[0].units[0].id;
 
@@ -47,11 +48,23 @@ describe('Catalog', () => {
     expect(unitListItem().textContent).not.toMatch(/✓|in progress/);
   });
 
-  it('shows the whole program: unauthored courses appear as coming soon', () => {
+  it('shows the whole program, with only the unauthored courses marked coming soon', () => {
     renderCatalog();
-    expect(screen.getByText(/APT 502 — Functional Human Anatomy/)).toBeInTheDocument();
     expect(screen.getByText(/APT 706 — Supervised Practicum/)).toBeInTheDocument();
-    expect(screen.getAllByText(/coming soon/i)).toHaveLength(23); // 24 courses, 1 authored
+    // derived from the content itself, so authoring a course cannot silently
+    // leave a stale count behind
+    const planned = curriculum.flatMap((s) => s.courses).length;
+    expect(screen.getAllByText(/^coming soon\.$/i)).toHaveLength(planned - courses.length);
+  });
+
+  it('lists the units of every authored course', () => {
+    renderCatalog();
+    for (const course of courses) {
+      for (const unit of course.units) {
+        expect(screen.getByRole('link', { name: new RegExp(unit.code.replace('.', '\\.')) }))
+          .toBeInTheDocument();
+      }
+    }
   });
 
   it('shows "in progress" once any component is completed', () => {

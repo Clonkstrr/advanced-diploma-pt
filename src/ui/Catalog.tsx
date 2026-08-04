@@ -46,7 +46,6 @@ export function Catalog() {
                     );
                   })}
                 </ul>
-                <p className="coming-soon">More units of this course are still being written.</p>
               </div>
             );
           })}
